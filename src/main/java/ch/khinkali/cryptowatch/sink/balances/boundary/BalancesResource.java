@@ -31,12 +31,12 @@ public class BalancesResource {
 
     @POST
     public Response orderCoin(JsonObject order) {
-        logger.info("order: " + order);
         final String coinSymbol = order.getString("coinSymbol", null);
         final Double amount = order.getJsonNumber("amount").doubleValue();
 
-        if (coinSymbol == null || amount == null)
+        if (coinSymbol == null || amount == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         final UUID orderId = UUID.randomUUID();
         commandService.placeOrder(new CoinInfo(orderId, coinSymbol, amount));
@@ -51,12 +51,11 @@ public class BalancesResource {
     @GET
     @Path("{id}")
     public JsonObject getOrder(@PathParam("id") UUID orderId) {
-        logger.info("getOrder");
         final CoinOrder order = queryService.getOrder(orderId);
-        logger.info("order: " + order);
 
-        if (order == null)
+        if (order == null) {
             throw new NotFoundException();
+        }
 
         return Json.createObjectBuilder()
                 .add("status", order.getState().name().toLowerCase())
