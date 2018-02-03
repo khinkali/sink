@@ -6,7 +6,7 @@ withEnv([   "HOST=18.196.37.97",
 
         stage('checkout & unit tests & build') {
             git url: "https://github.com/khinkali/sink"
-            sh "${mvnHome}/bin/mvn clean build"
+            sh "mvn clean package"
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
         }
         stage('test') {
