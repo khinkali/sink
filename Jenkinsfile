@@ -55,6 +55,9 @@ withEnv([   "HOST=18.196.37.97",
             sh "mvn versions:set -DnewVersion=${env.VERSION}"
             sh "git tag -a ${env.VERSION} -m \"Setze Version auf ${env.VERSION}\""
             withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                sh "git config user.email \"jenkins@khinkali.ch\""
+                sh "git config user.name \"Jenkins\""
+
                 sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/khinkali/sink.git --tags"
             }
             sh "docker ps"
