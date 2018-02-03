@@ -63,6 +63,11 @@
         <option name="VM_PARAMETERS" value="" />
         <option name="PROGRAM_PARAMETERS" value="" />
       </SHUTDOWN>
+      <EnvironmentVariables>
+        <option name="NAME" value="KAFKA_ADDRESS" />
+        <option name="VALUE" value="localhost:9092" />
+        <option name="IS_PREDEFINED" value="false" />
+      </EnvironmentVariables>
     </ConfigurationWrapper>
     <method>
       <option name="BuildArtifacts" enabled="true">

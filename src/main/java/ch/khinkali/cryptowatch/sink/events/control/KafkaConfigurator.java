@@ -14,12 +14,27 @@ public class KafkaConfigurator {
 
     @PostConstruct
     private void initProperties() {
-        try {
-            kafkaProperties = new Properties();
-            kafkaProperties.load(KafkaConfigurator.class.getResourceAsStream("/kafka.properties"));
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        kafkaProperties = new Properties();
+        kafkaProperties.put("bootstrap.servers", System.getenv("KAFKA_ADDRESS"));
+        kafkaProperties.put("coins.topic", "coins");
+        setConsumerProperties();
+        setProducerProperties();
+    }
+
+    private void setProducerProperties() {
+        kafkaProperties.put("batch.size", 16384);
+        kafkaProperties.put("linger.ms", 0);
+        kafkaProperties.put("buffer.memory", 33554432);
+        kafkaProperties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        kafkaProperties.put("value.serializer", "ch.khinkali.cryptowatch.sink.events.control.EventSerializer");
+    }
+
+    private void setConsumerProperties() {
+        kafkaProperties.put("isolation.level", "read_committed");
+        kafkaProperties.put("enable.auto.commit", false);
+        kafkaProperties.put("auto.offset.reset", "earliest");
+        kafkaProperties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        kafkaProperties.put("value.deserializer", "ch.khinkali.cryptowatch.sink.events.control.EventDeserializer");
     }
 
     @Produces
