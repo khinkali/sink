@@ -1,8 +1,9 @@
 withEnv([   "HOST=18.196.37.97",
             "PORT=30081"]) {
     node {
-        def mvnHome = tool 'M3'
-        env.PATH = "${mvnHome}/bin/;${env.PATH}"
+        tools {
+            maven 'M3'
+        }
 
         stage('checkout & unit tests & build') {
             git url: "https://github.com/khinkali/sink"
