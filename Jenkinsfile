@@ -73,7 +73,7 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('system tests') {
-            sh "mvn -s clean install failsafe:integration-test failsafe:verify"
+            sh "mvn clean install failsafe:integration-test failsafe:verify"
             junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
         }
     }
