@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sink
+  namespace: test
   labels:
     app: sink
 spec:
@@ -28,6 +29,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sink
+  namespace: test
 spec:
   selector:
     app: sink
@@ -35,5 +37,5 @@ spec:
   - protocol: TCP
     port: 8080
     targetPort: 8080
-    nodePort: 30081
+    nodePort: 31081
   type: NodePort

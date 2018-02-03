@@ -1,5 +1,5 @@
 withEnv([   "HOST=18.196.37.97",
-            "PORT=30081"]) {
+            "PORT=31081"]) {
     node {
         def mvnHome = tool 'M3'
         env.PATH = "${mvnHome}/bin/:${env.PATH}"
@@ -67,7 +67,7 @@ withEnv([   "HOST=18.196.37.97",
             sh "docker push khinkali/sink:${env.VERSION}"
         }
 
-        stage('deploy new version') {
+        stage('deploy to test') {
             sh "sed -i -e 's/        image: khinkali\\/sink:0.0.1/        image: khinkali\\/sink:${env.VERSION}/' startup.yml"
             sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
         }
@@ -75,6 +75,13 @@ withEnv([   "HOST=18.196.37.97",
         stage('system tests') {
             sh "mvn clean install failsafe:integration-test failsafe:verify"
             junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
+        }
+
+        stage('deploy to prod') {
+            input(message: 'deploy to prod?' )
+            sh "sed -i -e 's/  namespace: test/  namespace: default/' startup.yml"
+            sh "sed -i -e 's/    nodePort: 31081/    nodePort: 30081/' startup.yml"
+            sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
         }
     }
 }
