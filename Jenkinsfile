@@ -9,8 +9,13 @@ withEnv([   "HOST=18.196.37.97",
             sh "mvn clean package"
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
         }
+
+        stage('build image') {
+            sh "docker ps"
+        }
+
         stage('test') {
-            sh "/tmp/kubectl --kubeconfig /tmp/admin.conf get no"
+            sh "kubectl --kubeconfig /tmp/admin.conf get no"
         }
     }
 }
