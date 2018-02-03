@@ -10,7 +10,7 @@ withEnv([   "HOST=18.196.37.97",
             junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
         }
 
-        stage('build image') {
+        stage('build image & git tag & docker push') {
             def commitHistoryText = sh(
                         script: "git log `git describe --tags --abbrev=0`..HEAD --oneline",
                         returnStdout: true
@@ -67,9 +67,14 @@ withEnv([   "HOST=18.196.37.97",
             sh "docker push khinkali/sink:${env.VERSION}"
         }
 
-        stage('test') {
+        stage('deploy new version') {
             sh "sed -i -e 's/        image: khinkali\\/sink:0.0.1/        image: khinkali\\/sink:${env.VERSION}/' startup.yml"
             sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
+        }
+
+        stage('system tests') {
+            sh "mvn -s clean install failsafe:integration-test failsafe:verify"
+            junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
         }
     }
 }
