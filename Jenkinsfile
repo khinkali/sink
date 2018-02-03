@@ -3,6 +3,16 @@ withEnv([   "HOST=18.196.37.97",
     node {
         def mvnHome = tool 'M3'
         env.PATH = "${mvnHome}/bin/:${env.PATH}"
+        properties([
+                buildDiscarder(
+                        logRotator(artifactDaysToKeepStr: '',
+                                artifactNumToKeepStr: '',
+                                daysToKeepStr: '',
+                                numToKeepStr: '30'
+                        )
+                ),
+                pipelineTriggers([])
+        ])
 
         stage('checkout & unit tests & build') {
             git url: "https://github.com/khinkali/sink"
