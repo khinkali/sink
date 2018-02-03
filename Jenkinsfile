@@ -60,8 +60,6 @@ withEnv([   "HOST=18.196.37.97",
                 sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/khinkali/sink.git --tags"
             }
 
-            sh "ls -la"
-            sh "pwd"
             sh "docker build -t khinkali/sink:${env.VERSION} ."
             withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                 sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
@@ -70,9 +68,8 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('test') {
-            sh "kubectl --kubeconfig /tmp/admin.conf get no"
-            sh "ls -la"
-            sh "pwd"
+            sh "sed -i -e 's/        image: khinkali\/sink:0.0.1/        image: khinkali\/sink:${env.VERSION}/' startup.yml"
+            sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
         }
     }
 }
