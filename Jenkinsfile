@@ -68,7 +68,7 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('test') {
-            sh "sed -i -e 's/        image: khinkali\/sink:0.0.1/        image: khinkali\/sink:${env.VERSION}/' startup.yml"
+            sh "sed -i -e 's/        image: khinkali\\/sink:0.0.1/        image: khinkali\\/sink:${env.VERSION}/' startup.yml"
             sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
         }
     }
