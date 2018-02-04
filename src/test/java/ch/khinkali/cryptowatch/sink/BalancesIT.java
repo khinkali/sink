@@ -30,10 +30,14 @@ public class BalancesIT {
 
 
     private String getToken() throws IOException {
+        String applicationUserName = System.getenv("APPLICATION_USER_NAME");
+        String applicationPassword = System.getenv("APPLICATION_PASSWORD");
+        System.out.println("applicationUserName = " + applicationUserName);
+        System.out.println("applicationPassword = " + applicationPassword);
         return KeycloakHeaderCreator
                 .getTokenResponse(
-                        System.getenv("APPLICATION_USER_NAME"),
-                        System.getenv("APPLICATION_PASSWORD"))
+                        applicationUserName,
+                        applicationPassword)
                 .getToken();
     }
 
