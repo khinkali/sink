@@ -84,8 +84,7 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('system tests') {
-            sh "while [ `curl --write-out %{http_code} --silent --output /dev/null http://${HOST}:${PORT}/sink/resources/balances --max-time 2` -eq 404 ]; do sleep 1 && echo \"waiting for service\"; done;"
-            sh "sleep 30"
+            sh "while [ `curl --write-out %{http_code} --silent --output /dev/null http://${HOST}:${PORT}/sink/resources/health --max-time 2` -ne 200 ]; do sleep 1 && echo \"waiting for service\"; done;"
             withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
                 sh "mvn clean install failsafe:integration-test failsafe:verify"
             }
