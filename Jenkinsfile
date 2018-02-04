@@ -94,6 +94,7 @@ withEnv([   "HOST=18.196.37.97",
             input(message: 'deploy to prod?' )
             sh "sed -i -e 's/  namespace: test/  namespace: default/' startup.yml"
             sh "sed -i -e 's/    nodePort: 31081/    nodePort: 30081/' startup.yml"
+            sh "sed -i -e 's/          value: "http:\\/\\/18.196.37.97:31190\\/auth"/          value: "http:\\/\\/18.196.37.97:30190\\/auth/' startup.yml"
             sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
         }
     }

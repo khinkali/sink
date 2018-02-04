@@ -22,6 +22,8 @@ spec:
         env:
         - name: KAFKA_ADDRESS
           value: "kafka:9092"
+        - name: KEYCLOAK_URL
+          value: "http://18.196.37.97:31190/auth"
         ports:
         - containerPort: 8080
 ---
