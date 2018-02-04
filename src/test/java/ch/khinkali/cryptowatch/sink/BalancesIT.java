@@ -2,6 +2,7 @@ package ch.khinkali.cryptowatch.sink;
 
 import ch.khinkali.cryptowatch.sink.security.KeycloakHeaderCreator;
 import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
+import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,6 +29,10 @@ public class BalancesIT {
     public JAXRSClientProvider provider =
             buildWithURI("http://" + System.getenv("HOST") + ":" + System.getenv("PORT") + "/sink/resources/balances");
 
+    @After
+    public void tearUp() {
+        provider.client().close();
+    }
 
     private String getToken() throws IOException {
         return KeycloakHeaderCreator
