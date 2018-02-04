@@ -51,11 +51,13 @@ public class BalancesIT {
                 .build();
 
         System.out.println("http://" + System.getenv("HOST") + ":" + System.getenv("PORT") + "/sink/resources/balances");
+        String token = getToken();
+        System.out.println("token = " + token);
 
         Response postResponse = provider
                 .target()
                 .request()
-                .header("Authorization", "Bearer " + getToken())
+                .header("Authorization", "Bearer " + token)
                 .post(Entity.json(coinToAdd));
         assertThat(postResponse.getStatus(), is(202));
         location = postResponse.getHeaderString(LOCATION);
