@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Wildfly 11 (Roebi)" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss 11.0.0.Final" ALTERNATIVE_JRE_ENABLED="false">
+  <configuration default="false" name="wildfly 11" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss 11.0.0.Final" ALTERNATIVE_JRE_ENABLED="false">
     <option name="UPDATING_POLICY" value="restart-server" />
     <deployment>
       <artifact name="sink:war">
@@ -10,7 +10,7 @@
       <option name="SERVER" />
       <option name="BINDING_SET_NAME" value="" />
       <option name="DOMAIN" value="false" />
-      <option name="SERVER_GROUP" value="main-server-group" />
+      <option name="SERVER_GROUP" />
       <option name="USERNAME" value="" />
       <option name="PASSWORD" value="" />
     </server-settings>
@@ -66,6 +66,11 @@
       <EnvironmentVariables>
         <option name="NAME" value="KAFKA_ADDRESS" />
         <option name="VALUE" value="localhost:9092" />
+        <option name="IS_PREDEFINED" value="false" />
+      </EnvironmentVariables>
+      <EnvironmentVariables>
+        <option name="NAME" value="KEYCLOAK_URL" />
+        <option name="VALUE" value="http://localhost:8280/auth" />
         <option name="IS_PREDEFINED" value="false" />
       </EnvironmentVariables>
     </ConfigurationWrapper>

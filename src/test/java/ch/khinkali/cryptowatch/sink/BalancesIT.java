@@ -1,5 +1,6 @@
 package ch.khinkali.cryptowatch.sink;
 
+import ch.khinkali.cryptowatch.sink.security.KeycloakHeaderCreator;
 import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
@@ -11,6 +12,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 import static com.airhacks.rulz.jaxrsclient.JAXRSClientProvider.buildWithURI;
 import static org.hamcrest.CoreMatchers.is;
@@ -27,8 +29,16 @@ public class BalancesIT {
             buildWithURI("http://" + System.getenv("HOST") + ":" + System.getenv("PORT") + "/sink/resources/balances");
 
 
+    private String getToken() throws IOException {
+        return KeycloakHeaderCreator
+                .getTokenResponse(
+                        System.getenv("APPLICATION_USER_NAME"),
+                        System.getenv("APPLICATION_PASSWORD"))
+                .getToken();
+    }
+
     @Test
-    public void a01_shouldAddBTC() {
+    public void a01_shouldAddBTC() throws IOException {
         JsonObjectBuilder userBuilder = Json.createObjectBuilder();
         JsonObject coinToAdd = userBuilder
                 .add("coinSymbol", "BTC")
@@ -38,17 +48,19 @@ public class BalancesIT {
         Response postResponse = provider
                 .target()
                 .request()
+                .header("Authorization", "Bearer " + getToken())
                 .post(Entity.json(coinToAdd));
         assertThat(postResponse.getStatus(), is(202));
         location = postResponse.getHeaderString(LOCATION);
     }
 
     @Test
-    public void a02_shouldReturnBTC() {
+    public void a02_shouldReturnBTC() throws IOException {
         JsonObject coin = provider
                 .client()
                 .target(location)
                 .request()
+                .header("Authorization", "Bearer " + getToken())
                 .get(JsonObject.class);
         assertThat(coin.getString("coinSymbol"), is("BTC"));
         assertThat(coin.getJsonNumber("amount").doubleValue(), is(2.2));

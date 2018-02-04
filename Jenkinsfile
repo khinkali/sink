@@ -1,5 +1,6 @@
 withEnv([   "HOST=18.196.37.97",
-            "PORT=31081"]) {
+            "PORT=31081",
+            "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
     node {
         def mvnHome = tool 'M3'
         env.PATH = "${mvnHome}/bin/:${env.PATH}"
@@ -83,7 +84,9 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('system tests') {
-            sh "mvn clean install failsafe:integration-test failsafe:verify"
+            withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_USER_NAME', usernameVariable: 'APPLICATION_PASSWORD')]) {
+                sh "mvn clean install failsafe:integration-test failsafe:verify"
+            }
             junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
         }
 

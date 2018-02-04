@@ -1,0 +1,9 @@
+{
+  "realm": "cryptowatch",
+  "bearer-only": true,
+  "auth-server-url": "${env.KEYCLOAK_URL}",
+  "ssl-required": "none",
+  "resource": "sink",
+  "confidential-port": 0,
+  "enable-cors": true
+}
