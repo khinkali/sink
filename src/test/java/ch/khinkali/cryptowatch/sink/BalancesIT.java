@@ -55,7 +55,6 @@ public class BalancesIT {
                 .request()
                 .header("Authorization", "Bearer " + getToken())
                 .post(Entity.json(coinToAdd));
-        System.out.println("postResponse = " + postResponse);
         assertThat(postResponse.getStatus(), is(202));
         location = postResponse.getHeaderString(LOCATION);
     }

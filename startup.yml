@@ -26,6 +26,12 @@ spec:
           value: "http://18.196.37.97:31190/auth"
         ports:
         - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
 ---
 apiVersion: v1
 kind: Service
