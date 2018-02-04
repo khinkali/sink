@@ -45,6 +45,8 @@ public class BalancesIT {
                 .add("amount", 2.2)
                 .build();
 
+        System.out.println("http://" + System.getenv("HOST") + ":" + System.getenv("PORT") + "/sink/resources/balances");
+
         Response postResponse = provider
                 .target()
                 .request()
