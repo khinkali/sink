@@ -68,7 +68,7 @@ withEnv([   "HOST=18.196.37.97",
 
 
             @Library("semantic_releasing") _
-            env.VERSION = semantic-releasing.semanticReleasing()
+            env.VERSION = semantic_releasing.semanticReleasing()
             currentBuild.displayName = env.VERSION
 
             sh "mvn versions:set -DnewVersion=${env.VERSION}"
