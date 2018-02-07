@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 public class EventProducer {
-
     private Producer<String, CoinEvent> producer;
     private String topic;
 
@@ -29,23 +28,16 @@ public class EventProducer {
 
     @PostConstruct
     private void init() {
-        logger.info("init");
         kafkaProperties.put("transactional.id", UUID.randomUUID().toString());
-        logger.info("  after transaction");
         producer = new KafkaProducer<>(kafkaProperties);
-        logger.info("  after producer");
         topic = kafkaProperties.getProperty("coins.topic");
-        logger.info("  after topic");
         producer.initTransactions();
-        logger.info("init finished");
     }
 
     public void publish(CoinEvent event) {
-        logger.info("publish coin event");
         final ProducerRecord<String, CoinEvent> record = new ProducerRecord<>(topic, event);
         try {
             producer.beginTransaction();
-            logger.info("publishing = " + record);
             producer.send(record);
             producer.commitTransaction();
         } catch (ProducerFencedException e) {

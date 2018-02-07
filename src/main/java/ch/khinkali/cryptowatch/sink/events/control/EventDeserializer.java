@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class EventDeserializer implements Deserializer<CoinEvent> {
-
     private static final Logger logger = Logger.getLogger(EventDeserializer.class.getName());
 
     @Override

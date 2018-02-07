@@ -22,6 +22,9 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('build image & git tag & docker push') {
+
+
+            /*
             def commitHistoryText = sh(
                         script: "git log `git describe --tags --abbrev=0`..HEAD --oneline",
                         returnStdout: true
@@ -61,6 +64,11 @@ withEnv([   "HOST=18.196.37.97",
             }
 
             env.VERSION = "${major}.${minor}.${bug}"
+            */
+
+
+            @Library("semantic_releasing") _
+            env.VERSION = semanticReleasing()
             currentBuild.displayName = env.VERSION
 
             sh "mvn versions:set -DnewVersion=${env.VERSION}"

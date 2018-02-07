@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import static java.util.Arrays.asList;
 
 public class EventConsumer implements Runnable {
-
     private final KafkaConsumer<String, CoinEvent> consumer;
     private final Consumer<CoinEvent> eventConsumer;
     private final AtomicBoolean closed = new AtomicBoolean();
