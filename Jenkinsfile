@@ -1,6 +1,5 @@
 @Library('semantic_releasing')_
 
-
 withEnv([   "HOST=18.196.37.97",
             "PORT=31081",
             "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
@@ -25,7 +24,7 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('build image & git tag & docker push') {
-            env.VERSION = semanticReleasing()
+            env.VERSION = semanticReleasing(['API'], ['FEAT'])
             currentBuild.displayName = env.VERSION
 
             sh "mvn versions:set -DnewVersion=${env.VERSION}"
