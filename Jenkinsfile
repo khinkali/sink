@@ -1,6 +1,5 @@
 @Library('semantic_releasing')_
 
-
 withEnv([   "HOST=18.196.37.97",
             "PORT=31081",
             "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
