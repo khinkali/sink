@@ -56,7 +56,10 @@ withEnv([   "HOST=18.196.37.97",
 
         stage('deploy to prod') {
             input(message: 'deploy to prod?' )
-            def RELEASE_NOTES = "# Release notes for ${env.VERSION}\\n${commitComments()}"
+            def RELEASE_NOTES = "# Release notes for ${env.VERSION}\\n"
+            for(def commitMessage : commitComments()) {
+                RELEASE_NOTES += "* ${commitMessage}\\n"
+            }
             withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
                 sh "curl --data '{\"tag_name\": \"${env.VERSION}\",\"target_commitish\": \"master\",\"name\": \"${env.VERSION}\",\"body\": \"${RELEASE_NOTES}\",\"draft\": false,\"prerelease\": false}' https://api.github.com/repos/khinkali/sink/releases?access_token=${GITHUB_TOKEN}"
             }
