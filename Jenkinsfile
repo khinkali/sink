@@ -24,7 +24,7 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('build image & git tag & docker push') {
-            env.VERSION = semanticReleasing(['API', 'MAJOR'], ['FEAT', 'MINOR'])
+            env.VERSION = semanticReleasing()
             currentBuild.displayName = env.VERSION
 
             sh "mvn versions:set -DnewVersion=${env.VERSION}"
