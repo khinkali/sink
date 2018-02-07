@@ -1,3 +1,5 @@
+@Library('semantic_releasing')_
+
 withEnv([   "HOST=18.196.37.97",
             "PORT=31081",
             "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
@@ -22,7 +24,6 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('build image & git tag & docker push') {
-            @Library('semantic_releasing')_
             env.VERSION = semanticReleasing()
             currentBuild.displayName = env.VERSION
 
