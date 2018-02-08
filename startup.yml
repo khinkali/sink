@@ -28,7 +28,7 @@ spec:
         - containerPort: 8080
         readinessProbe:
           httpGet:
-            path: /health
+            path: /sink/resources/health
             port: 8080
           initialDelaySeconds: 5
           timeoutSeconds: 1
