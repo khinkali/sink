@@ -49,7 +49,7 @@ withEnv([   "HOST=18.196.37.97",
 
         stage('system tests') {
             withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
-                sh "mvn clean install failsafe:integration-test failsafe:verify"
+                sh "mvn clean verify failsafe:integration-test failsafe:verify"
             }
             junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
         }
