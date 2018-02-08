@@ -55,9 +55,9 @@ withEnv([   "HOST=18.196.37.97",
         }
 
         stage('deploy to prod') {
-            input(message: 'deploy to prod?' )
+            input(message: 'manuel user tests ok?' )
             def RELEASE_NOTES = "# Release notes for ${env.VERSION}\\n"
-            for(def commitMessage : commitComments()) {
+            for(def commitMessage : commitComments('khinkali', 'sink')) {
                 RELEASE_NOTES += "* ${commitMessage}\\n"
             }
             echo "RELEASE_NOTES: ${RELEASE_NOTES}"
