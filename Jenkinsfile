@@ -57,7 +57,7 @@ withEnv([   "HOST=18.196.37.97",
         stage('deploy to prod') {
             input(message: 'manuel user tests ok?' )
             withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
-                gitHubRelease(${env.VERSION}, 'khinkali', 'sink', ${GITHUB_TOKEN})
+                gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
             }
             sh "sed -i -e 's/  namespace: test/  namespace: default/' startup.yml"
             sh "sed -i -e 's/    nodePort: 31081/    nodePort: 30081/' startup.yml"
