@@ -65,7 +65,7 @@
       </SHUTDOWN>
       <EnvironmentVariables>
         <option name="NAME" value="KAFKA_ADDRESS" />
-        <option name="VALUE" value="localhost:9092" />
+        <option name="VALUE" value="kafka:9092" />
         <option name="IS_PREDEFINED" value="false" />
       </EnvironmentVariables>
       <EnvironmentVariables>

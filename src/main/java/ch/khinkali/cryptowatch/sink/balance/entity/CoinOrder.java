@@ -1,4 +1,4 @@
-package ch.khinkali.cryptowatch.sink.balances.entity;
+package ch.khinkali.cryptowatch.sink.balance.entity;
 
 import ch.khinkali.cryptowatch.sink.events.entity.CoinInfo;
 import lombok.Getter;

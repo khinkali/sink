@@ -17,6 +17,7 @@ public class KafkaConfigurator {
         kafkaProperties = new Properties();
         kafkaProperties.put("bootstrap.servers", System.getenv("KAFKA_ADDRESS"));
         kafkaProperties.put("coins.topic", "coins");
+        kafkaProperties.put("users.topic", "users");
         setConsumerProperties();
         setProducerProperties();
     }

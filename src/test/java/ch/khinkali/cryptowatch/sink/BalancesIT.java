@@ -57,6 +57,7 @@ public class BalancesIT {
                 .post(Entity.json(coinToAdd));
         assertThat(postResponse.getStatus(), is(202));
         location = postResponse.getHeaderString(LOCATION);
+        System.out.println("location = " + location);
     }
 
     @Test
@@ -67,6 +68,9 @@ public class BalancesIT {
                 .request()
                 .header("Authorization", "Bearer " + getToken())
                 .get(JsonObject.class);
+
+        System.out.println("coin = " + coin);
+
         assertThat(coin.getString("coinSymbol"), is("BTC"));
         assertThat(coin.getJsonNumber("amount").doubleValue(), is(2.2));
     }

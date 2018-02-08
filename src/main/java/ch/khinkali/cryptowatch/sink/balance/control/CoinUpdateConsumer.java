@@ -1,6 +1,6 @@
-package ch.khinkali.cryptowatch.sink.balances.control;
+package ch.khinkali.cryptowatch.sink.balance.control;
 
-import ch.khinkali.cryptowatch.sink.events.control.EventConsumer;
+import ch.khinkali.cryptowatch.sink.events.control.CoinEventConsumer;
 import ch.khinkali.cryptowatch.sink.events.entity.CoinEvent;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @Singleton
 public class CoinUpdateConsumer {
 
-    private EventConsumer eventConsumer;
+    private CoinEventConsumer eventConsumer;
 
     @Resource
     ManagedExecutorService mes;
@@ -38,7 +38,7 @@ public class CoinUpdateConsumer {
         kafkaProperties.put("group.id", "order-consumer-" + UUID.randomUUID());
         String orders = kafkaProperties.getProperty("coins.topic");
 
-        eventConsumer = new EventConsumer(kafkaProperties, ev -> {
+        eventConsumer = new CoinEventConsumer(kafkaProperties, ev -> {
             logger.info("firing = " + ev);
             events.fire(ev);
         }, orders);

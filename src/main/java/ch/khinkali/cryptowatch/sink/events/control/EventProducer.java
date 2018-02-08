@@ -1,7 +1,6 @@
 package ch.khinkali.cryptowatch.sink.events.control;
 
 import ch.khinkali.cryptowatch.sink.events.entity.CoinEvent;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.KafkaException;
@@ -29,7 +28,7 @@ public class EventProducer {
     @PostConstruct
     private void init() {
         kafkaProperties.put("transactional.id", UUID.randomUUID().toString());
-        producer = new KafkaProducer<>(kafkaProperties);
+//        producer = new KafkaProducer<>(kafkaProperties);
         topic = kafkaProperties.getProperty("coins.topic");
         producer.initTransactions();
     }

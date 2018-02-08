@@ -1,6 +1,6 @@
-package ch.khinkali.cryptowatch.sink.balances.control;
+package ch.khinkali.cryptowatch.sink.balance.control;
 
-import ch.khinkali.cryptowatch.sink.balances.entity.CoinOrder;
+import ch.khinkali.cryptowatch.sink.balance.entity.CoinOrder;
 import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
 
 import javax.ejb.ConcurrencyManagement;

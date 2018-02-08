@@ -1,7 +1,7 @@
-package ch.khinkali.cryptowatch.sink.balances.boundary;
+package ch.khinkali.cryptowatch.sink.balance.boundary;
 
-import ch.khinkali.cryptowatch.sink.balances.control.CoinOrders;
-import ch.khinkali.cryptowatch.sink.balances.entity.CoinOrder;
+import ch.khinkali.cryptowatch.sink.balance.control.CoinOrders;
+import ch.khinkali.cryptowatch.sink.balance.entity.CoinOrder;
 
 import javax.inject.Inject;
 import java.util.UUID;
