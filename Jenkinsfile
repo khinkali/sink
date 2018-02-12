@@ -46,7 +46,7 @@ withEnv([   "HOST=18.196.37.97",
             sh "sed -i -e 's/        image: khinkali\\/sink:0.0.1/        image: khinkali\\/sink:${env.VERSION}/' startup.yml"
             sh "sed -i -e 's/          value: \"0.0.1\"/          value: \"${env.VERSION}\"/' startup.yml"
             sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
-            checkVersion(HOST, PORT)
+            checkVersion(env.VERSION, "http://${HOST}:${PORT}/sink/resources/health")
         }
 
         stage('system tests') {
@@ -65,22 +65,7 @@ withEnv([   "HOST=18.196.37.97",
             sh "sed -i -e 's/    nodePort: 31081/    nodePort: 30081/' startup.yml"
             sh "sed -i -e 's/          value: \"http:\\/\\/18.196.37.97:31190\\/auth\"/          value: \"http:\\/\\/18.196.37.97:30190\\/auth\"/' startup.yml"
             sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
-            checkVersion('18.196.37.97', '30081')
+            checkVersion(env.VERSION, 'http://18.196.37.97:30081/sink/resources/health')
         }
-    }
-}
-
-def checkVersion(String host, String port) {
-    def versionText = sh(
-            script: "curl http://${HOST}:${PORT}/sink/resources/health --max-time 2",
-            returnStdout: true
-    ).trim()
-    while(versionText != env.VERSION) {
-        sleep 1
-        echo "still waiting - version is ${versionText} and should be ${env.VERSION}"
-        versionText = sh(
-                script: "curl http://${host}:${port}/sink/resources/health --max-time 2",
-                returnStdout: true
-        ).trim()
     }
 }
