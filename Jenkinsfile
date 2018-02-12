@@ -51,7 +51,7 @@ withEnv([   "HOST=18.196.37.97",
                     returnStdout: true
             ).trim()
             while(versionText != env.VERSION) {
-                sleep .250
+                sleep 1
                 echo "still waiting - version is ${versionText} and should be ${env.VERSION}"
                 versionText = sh(
                         script: "curl http://${HOST}:${PORT}/sink/resources/health --max-time 2",
