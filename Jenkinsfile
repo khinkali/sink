@@ -46,7 +46,7 @@ withEnv([   "HOST=18.196.37.97",
             sh "sed -i -e 's/        image: khinkali\\/sink:0.0.1/        image: khinkali\\/sink:${env.VERSION}/' startup.yml"
             sh "sed -i -e 's/          value: \"0.0.1\"/          value: \"${env.VERSION}\"/' startup.yml"
             sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
-            checkVersion(${HOST}, ${PORT})
+            checkVersion(HOST, PORT)
         }
 
         stage('system tests') {
