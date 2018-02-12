@@ -24,9 +24,6 @@ public class UserUpdateConsumer {
     ManagedExecutorService mes;
 
     @Inject
-    Properties kafkaProperties;
-
-    @Inject
     Event<String> events;
 
     @Inject
@@ -34,13 +31,19 @@ public class UserUpdateConsumer {
 
     @PostConstruct
     private void init() {
+        Properties kafkaProperties = new Properties();
+        kafkaProperties.put("bootstrap.servers", System.getenv("KAFKA_ADDRESS"));
+        kafkaProperties.put("isolation.level", "read_committed");
+        kafkaProperties.put("enable.auto.commit", false);
+        kafkaProperties.put("auto.offset.reset", "earliest");
+        kafkaProperties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        kafkaProperties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         kafkaProperties.put("group.id", "user-consumer-" + UUID.randomUUID());
-        String orders = kafkaProperties.getProperty("users.topic");
 
         eventConsumer = new UserEventConsumer(kafkaProperties, ev -> {
             logger.info("firing = " + ev);
             events.fire(ev);
-        }, orders);
+        }, "users");
 
         mes.execute(eventConsumer);
     }
