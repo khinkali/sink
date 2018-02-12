@@ -1,6 +1,6 @@
 package ch.khinkali.cryptowatch.sink.user.control;
 
-import ch.khinkali.cryptowatch.sink.events.control.UserCreated;
+import ch.khinkali.cryptowatch.user.events.entity.UserCreated;
 
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
