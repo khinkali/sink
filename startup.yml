@@ -24,6 +24,8 @@ spec:
           value: "kafka:9092"
         - name: KEYCLOAK_URL
           value: "http://18.196.37.97:31190/auth"
+        - name: VERSION
+          value: "0.0.1"
         ports:
         - containerPort: 8080
         readinessProbe:

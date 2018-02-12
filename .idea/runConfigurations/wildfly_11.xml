@@ -73,6 +73,11 @@
         <option name="VALUE" value="http://localhost:8280/auth" />
         <option name="IS_PREDEFINED" value="false" />
       </EnvironmentVariables>
+      <EnvironmentVariables>
+        <option name="NAME" value="VERSION" />
+        <option name="VALUE" value="1.0.0" />
+        <option name="IS_PREDEFINED" value="false" />
+      </EnvironmentVariables>
     </ConfigurationWrapper>
     <method>
       <option name="BuildArtifacts" enabled="true">

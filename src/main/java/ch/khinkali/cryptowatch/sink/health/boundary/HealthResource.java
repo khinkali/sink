@@ -8,7 +8,7 @@ public class HealthResource {
 
     @GET
     public String getHealth() {
-        return "Everything ok!";
+        return System.getenv("VERSION");
     }
 
 }

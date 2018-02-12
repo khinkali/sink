@@ -44,7 +44,19 @@ withEnv([   "HOST=18.196.37.97",
 
         stage('deploy to test') {
             sh "sed -i -e 's/        image: khinkali\\/sink:0.0.1/        image: khinkali\\/sink:${env.VERSION}/' startup.yml"
+            sh "sed -i -e 's/          value: \"0.0.1\"/          value: \"${env.VERSION}\"/' startup.yml"
             sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
+            def versionText = sh(
+                    script: "curl http://${HOST}:${PORT}/sink/resources/health --max-time 2",
+                    returnStdout: true
+            ).trim()
+            while(versionText != env.VERSION) {
+                echo "still waiting - version is ${versionText} and should be ${env.VERSION}"
+                versionText = sh(
+                        script: "curl http://${HOST}:${PORT}/sink/resources/health --max-time 2",
+                        returnStdout: true
+                ).trim()
+            }
         }
 
         stage('system tests') {
