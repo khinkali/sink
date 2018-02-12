@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 import static java.util.Arrays.asList;
 
 public class UserEventConsumer implements Runnable {
-    private final KafkaConsumer<String, String> consumer;
-    private final Consumer<String> eventConsumer;
+    private final KafkaConsumer<String, UserCreated> consumer;
+    private final Consumer<UserCreated> eventConsumer;
     private final AtomicBoolean closed = new AtomicBoolean();
 
-    public UserEventConsumer(Properties kafkaProperties, Consumer<String> eventConsumer, String... topics) {
+    public UserEventConsumer(Properties kafkaProperties, Consumer<UserCreated> eventConsumer, String... topics) {
         this.eventConsumer = eventConsumer;
         consumer = new KafkaConsumer<>(kafkaProperties);
         consumer.subscribe(asList(topics));
@@ -36,8 +36,8 @@ public class UserEventConsumer implements Runnable {
     }
 
     private void consume() {
-        ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
-        for (ConsumerRecord<String, String> record : records) {
+        ConsumerRecords<String, UserCreated> records = consumer.poll(Long.MAX_VALUE);
+        for (ConsumerRecord<String, UserCreated> record : records) {
             eventConsumer.accept(record.value());
         }
         consumer.commitSync();

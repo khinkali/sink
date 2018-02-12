@@ -1,5 +1,7 @@
 package ch.khinkali.cryptowatch.sink.user.control;
 
+import ch.khinkali.cryptowatch.sink.events.control.UserCreated;
+
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.Singleton;
@@ -16,7 +18,7 @@ public class Users {
     @Inject
     Logger logger;
 
-    public void apply(@Observes String userEvent) {
+    public void apply(@Observes UserCreated userEvent) {
         logger.info("userEvent: " + userEvent);
     }
 

@@ -1,5 +1,6 @@
 package ch.khinkali.cryptowatch.sink.user.control;
 
+import ch.khinkali.cryptowatch.sink.events.control.UserCreated;
 import ch.khinkali.cryptowatch.sink.events.control.UserEventConsumer;
 
 import javax.annotation.PostConstruct;
@@ -24,7 +25,7 @@ public class UserUpdateConsumer {
     ManagedExecutorService mes;
 
     @Inject
-    Event<String> events;
+    Event<UserCreated> events;
 
     @Inject
     Logger logger;
@@ -37,7 +38,7 @@ public class UserUpdateConsumer {
         kafkaProperties.put("enable.auto.commit", false);
         kafkaProperties.put("auto.offset.reset", "earliest");
         kafkaProperties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        kafkaProperties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        kafkaProperties.put("value.deserializer", "ch.khinkali.cryptowatch.sink.events.control.UserEventDeserializer");
         kafkaProperties.put("group.id", "user-consumer-" + UUID.randomUUID());
 
         eventConsumer = new UserEventConsumer(kafkaProperties, ev -> {
