@@ -38,7 +38,7 @@ public class BalancesIT {
         System.out.println("System.getenv(\"HOST\") = " + System.getenv("HOST"));
         System.out.println("System.getenv(\"PORT\") = " + System.getenv("PORT"));
         System.out.println("System.getenv(\"APPLICATION_USER_NAME\") = " + System.getenv("APPLICATION_USER_NAME"));
-        System.out.println("System.getenv(\"APPLICATION_PASSWORD\") = " + System.getenv("APPLICATION_PASSWORD").length());
+        System.out.println("System.getenv(\"NEXUS_USERNAME\") = " + System.getenv("NEXUS_USERNAME"));
         return KeycloakHeaderCreator
                 .getTokenResponse(
                         System.getenv("APPLICATION_USER_NAME"),
