@@ -1,6 +1,6 @@
 @Library('semantic_releasing')_
 
-podTemplate(label: 'jenkins-slave-khinkali') {
+podTemplate(label: 'mypod') {
     withEnv([   "HOST=18.196.37.97",
                 "PORT=31081",
                 "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
