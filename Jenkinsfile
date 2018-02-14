@@ -1,16 +1,10 @@
 @Library('semantic_releasing')_
 
-podTemplate(label: 'mypod', containers: [
-    containerTemplate(name: 'khinkali', image: 'khinkali/jenkinstemplate:0.0.2', ttyEnabled: true, command: 'cat')
-  ],
-  volumes: [
-    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  ]) {
+podTemplate(label: 'jenkins-slave-khinkali') {
     withEnv([   "HOST=18.196.37.97",
                 "PORT=31081",
                 "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
         node('mypod') {
-        container('khinkali') {
             def mvnHome = tool 'M3'
             env.PATH = "${mvnHome}/bin/:${env.PATH}"
             properties([
@@ -76,7 +70,6 @@ podTemplate(label: 'mypod', containers: [
                 sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
                 checkVersion(env.VERSION, 'http://18.196.37.97:30081/sink/resources/health')
             }
-        }
         }
     }
 }
