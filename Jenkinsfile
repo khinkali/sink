@@ -1,6 +1,11 @@
 @Library('semantic_releasing')_
 
-podTemplate(label: 'mypod') {
+podTemplate(label: 'mypod', containers: [
+    containerTemplate(name: 'khinkali', image: 'khinkali/jenkinstemplate:0.0.2', ttyEnabled: true, command: 'cat')
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+  ]) {
     withEnv([   "HOST=18.196.37.97",
                 "PORT=31081",
                 "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
@@ -38,11 +43,14 @@ podTemplate(label: 'mypod') {
                     sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/khinkali/sink.git --tags"
                 }
 
-                sh "docker build -t khinkali/sink:${env.VERSION} ."
-                withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
+
+                container('khinkali') {
+                    sh "docker build -t khinkali/sink:${env.VERSION} ."
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
+                    }
+                    sh "docker push khinkali/sink:${env.VERSION}"
                 }
-                sh "docker push khinkali/sink:${env.VERSION}"
             }
 
             stage('deploy to test') {
