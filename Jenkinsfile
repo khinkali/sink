@@ -6,6 +6,7 @@ podTemplate(label: 'mypod', containers: [
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
+  container('khinkali') {
     withEnv([   "HOST=18.196.37.97",
                 "PORT=31081",
                 "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
@@ -77,4 +78,5 @@ podTemplate(label: 'mypod', containers: [
             }
         }
     }
+}
 }
