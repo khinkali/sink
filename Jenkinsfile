@@ -6,7 +6,6 @@ podTemplate(label: 'mypod', containers: [
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
-  container('khinkali') {
     withEnv([   "HOST=18.196.37.97",
                 "PORT=31081",
                 "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
@@ -33,6 +32,7 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('build image & git tag & docker push') {
+              container('khinkali') {
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
 
@@ -49,13 +49,16 @@ podTemplate(label: 'mypod', containers: [
                     sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
                 }
                 sh "docker push khinkali/sink:${env.VERSION}"
+              }
             }
 
             stage('deploy to test') {
+              container('khinkali') {
                 sh "sed -i -e 's/        image: khinkali\\/sink:0.0.1/        image: khinkali\\/sink:${env.VERSION}/' startup.yml"
                 sh "sed -i -e 's/          value: \"0.0.1\"/          value: \"${env.VERSION}\"/' startup.yml"
                 sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
                 checkVersion(env.VERSION, "http://${HOST}:${PORT}/sink/resources/health")
+              }
             }
 
             stage('system tests') {
@@ -66,6 +69,7 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('deploy to prod') {
+              container('khinkali') {
                 input(message: 'manuel user tests ok?' )
                 withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
                     gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
@@ -75,8 +79,8 @@ podTemplate(label: 'mypod', containers: [
                 sh "sed -i -e 's/          value: \"http:\\/\\/18.196.37.97:31190\\/auth\"/          value: \"http:\\/\\/18.196.37.97:30190\\/auth\"/' startup.yml"
                 sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
                 checkVersion(env.VERSION, 'http://18.196.37.97:30081/sink/resources/health')
+              }
             }
         }
     }
-}
 }
