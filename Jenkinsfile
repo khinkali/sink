@@ -67,8 +67,10 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('system tests') {
-                withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
-                    sh "mvn clean verify failsafe:integration-test failsafe:verify"
+                withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
+                        sh "mvn -s settings.xml clean verify failsafe:integration-test failsafe:verify"
+                    }
                 }
                 junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
             }
