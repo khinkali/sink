@@ -59,8 +59,8 @@ podTemplate(label: 'mypod', containers: [
                 sh "sed -i -e 's/          value: \"0.0.1\"/          value: \"${env.VERSION}\"/' startup.yml"
                 container('kubectl') {
                     sh "kubectl apply -f startup.yml"
+                    checkVersion(env.VERSION, "http://${HOST}:${PORT}/sink/resources/health")
                 }
-                checkVersion(env.VERSION, "http://${HOST}:${PORT}/sink/resources/health")
             }
 
             stage('system tests') {
