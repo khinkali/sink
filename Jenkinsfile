@@ -1,7 +1,7 @@
 @Library('semantic_releasing')_
 
 podTemplate(label: 'mypod', containers: [
-    containerTemplate(name: 'khinkali', image: 'khinkali/jenkinstemplate:0.0.2', ttyEnabled: true, command: 'cat')
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat')
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -44,7 +44,7 @@ podTemplate(label: 'mypod', containers: [
                 }
 
 
-                container('khinkali') {
+                container('docker') {
                     sh "docker build -t khinkali/sink:${env.VERSION} ."
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
