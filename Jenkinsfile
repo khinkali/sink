@@ -1,6 +1,6 @@
 @Library('semantic_releasing')_
 
-podTemplate(label: 'mypod', containers: [
+/*podTemplate(label: 'mypod', containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'curl', image: 'khinkali/jenkinstemplate:0.0.3', command: 'cat', ttyEnabled: true),
@@ -8,11 +8,11 @@ podTemplate(label: 'mypod', containers: [
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  ]) {
+  ]) {*/
     withEnv([   "HOST=18.196.37.97",
                 "PORT=31081",
                 "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
-        node('mypod') {
+        node/*('mypod')*/ {
             def mvnHome = tool 'M3'
             env.PATH = "${mvnHome}/bin/:${env.PATH}"
             properties([
@@ -47,34 +47,34 @@ podTemplate(label: 'mypod', containers: [
                 }
 
 
-                container('docker') {
+               // container('docker') {
                     sh "docker build -t khinkali/sink:${env.VERSION} ."
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
                     }
                     sh "docker push khinkali/sink:${env.VERSION}"
-                }
+              //  }
             }
 
             stage('deploy to test') {
                 sh "sed -i -e 's/        image: khinkali\\/sink:0.0.1/        image: khinkali\\/sink:${env.VERSION}/' startup.yml"
                 sh "sed -i -e 's/          value: \"0.0.1\"/          value: \"${env.VERSION}\"/' startup.yml"
-                container('kubectl') {
+              //  container('kubectl') {
                     sh "kubectl apply -f startup.yml"
-                }
-                container('curl') {
+             //   }
+             //   container('curl') {
                     checkVersion(env.VERSION, "http://${HOST}:${PORT}/sink/resources/health")
-                }
+              //  }
             }
 
             stage('system tests') {
-                container('maven') {
-                    withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
+            //    container('maven') {
+             //       withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                         withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
                             sh "mvn -s settings.xml clean verify failsafe:integration-test failsafe:verify"
                         }
-                    }
-                }
+             //       }
+            //    }
                 junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
             }
 
