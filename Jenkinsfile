@@ -5,7 +5,7 @@ podTemplate(label: 'mypod') {
     withEnv([   "HOST=18.196.37.97",
                 "PORT=31081",
                 "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
-        node {
+        node('mypod') {
             def mvnHome = tool 'M3'
             env.PATH = "${mvnHome}/bin/:${env.PATH}"
             properties([
