@@ -3,6 +3,7 @@
 podTemplate(label: 'mypod', containers: [
     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'curl', image: 'khinkali/jenkinstemplate:0.0.3', command: 'cat', ttyEnabled: true),
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -59,6 +60,8 @@ podTemplate(label: 'mypod', containers: [
                 sh "sed -i -e 's/          value: \"0.0.1\"/          value: \"${env.VERSION}\"/' startup.yml"
                 container('kubectl') {
                     sh "kubectl apply -f startup.yml"
+                }
+                container('curl') {
                     checkVersion(env.VERSION, "http://${HOST}:${PORT}/sink/resources/health")
                 }
             }
