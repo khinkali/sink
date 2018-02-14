@@ -68,26 +68,30 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('system tests') {
-               // withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
-                    withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
-                        container('maven') {
-                            sh "mvn -s settings.xml clean verify failsafe:integration-test failsafe:verify"
-                        }
+                withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
+                    container('maven') {
+                        sh "mvn -s settings.xml clean verify failsafe:integration-test failsafe:verify"
                     }
-              //  }
+                }
                 junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
             }
 
             stage('deploy to prod') {
                 input(message: 'manuel user tests ok?' )
                 withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
-                    gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
+                    container('curl') {
+                        gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
+                    }
                 }
                 sh "sed -i -e 's/  namespace: test/  namespace: default/' startup.yml"
                 sh "sed -i -e 's/    nodePort: 31081/    nodePort: 30081/' startup.yml"
                 sh "sed -i -e 's/          value: \"http:\\/\\/18.196.37.97:31190\\/auth\"/          value: \"http:\\/\\/18.196.37.97:30190\\/auth\"/' startup.yml"
-                sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
-                checkVersion(env.VERSION, 'http://18.196.37.97:30081/sink/resources/health')
+                container('kubectl') {
+                    sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
+                }
+                container('curl') {
+                    checkVersion(env.VERSION, 'http://18.196.37.97:30081/sink/resources/health')
+                }
             }
         }
     }
