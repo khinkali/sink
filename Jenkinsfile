@@ -1,7 +1,8 @@
 @Library('semantic_releasing')_
 
 podTemplate(label: 'mypod', containers: [
-    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat')
+    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
   ],
   volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -56,7 +57,9 @@ podTemplate(label: 'mypod', containers: [
             stage('deploy to test') {
                 sh "sed -i -e 's/        image: khinkali\\/sink:0.0.1/        image: khinkali\\/sink:${env.VERSION}/' startup.yml"
                 sh "sed -i -e 's/          value: \"0.0.1\"/          value: \"${env.VERSION}\"/' startup.yml"
-                sh "kubectl --kubeconfig /tmp/admin.conf apply -f startup.yml"
+                container('kubectl') {
+                    sh "kubectl apply -f startup.yml"
+                }
                 checkVersion(env.VERSION, "http://${HOST}:${PORT}/sink/resources/health")
             }
 
