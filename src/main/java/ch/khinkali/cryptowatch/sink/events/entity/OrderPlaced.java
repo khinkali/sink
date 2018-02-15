@@ -1,25 +1,22 @@
 package ch.khinkali.cryptowatch.sink.events.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.json.JsonObject;
-import java.time.Instant;
 
-public class OrderPlaced extends CoinEvent {
-
-    @Getter
-    private final CoinInfo coinInfo;
-
-    public OrderPlaced(final CoinInfo coinInfo) {
-        this.coinInfo = coinInfo;
-    }
-
-    public OrderPlaced(final CoinInfo coinInfo, Instant instant) {
-        super(instant);
-        this.coinInfo = coinInfo;
-    }
+@AllArgsConstructor
+@Getter
+public class OrderPlaced {
+    private final String orderId;
+    private final String coinSymbol;
+    private final Double amount;
+    private final String userId;
 
     public OrderPlaced(JsonObject jsonObject) {
-        this(new CoinInfo(jsonObject.getJsonObject("coinInfo")), Instant.parse(jsonObject.getString("instant")));
+        this(jsonObject.getString("orderId"),
+                jsonObject.getString("coinSymbol"),
+                jsonObject.getJsonNumber("amount").doubleValue(),
+                jsonObject.getString("userId"));
     }
 }

@@ -1,7 +1,6 @@
 package ch.khinkali.cryptowatch.sink.balance.boundary;
 
-import ch.khinkali.cryptowatch.sink.balance.entity.CoinOrder;
-import ch.khinkali.cryptowatch.sink.events.entity.CoinInfo;
+import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
 
 import javax.inject.Inject;
 import javax.json.Json;
@@ -29,17 +28,21 @@ public class BalancesResource {
     @Inject
     BalancesQueryService queryService;
 
+    @Context
+    private SecurityContext securityContext;
+
     @POST
     public Response orderCoin(JsonObject order) {
         final String coinSymbol = order.getString("coinSymbol", null);
         final Double amount = order.getJsonNumber("amount").doubleValue();
+        final String userId = securityContext.getUserPrincipal().getName();
 
         if (coinSymbol == null || amount == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         final UUID orderId = UUID.randomUUID();
-        commandService.placeOrder(new CoinInfo(orderId, coinSymbol, amount));
+        commandService.placeOrder(orderId.toString(), coinSymbol, amount, userId);
 
         final URI uri = uriInfo
                 .getRequestUriBuilder()
@@ -51,16 +54,15 @@ public class BalancesResource {
     @GET
     @Path("{id}")
     public JsonObject getOrder(@PathParam("id") UUID orderId) {
-        final CoinOrder order = queryService.getOrder(orderId);
+        final OrderPlaced order = queryService.getOrder(orderId.toString());
 
         if (order == null) {
             throw new NotFoundException();
         }
 
         return Json.createObjectBuilder()
-                .add("status", order.getState().name().toLowerCase())
-                .add("coinSymbol", order.getCoinInfo().getCoinSymbol())
-                .add("amount", order.getCoinInfo().getAmount())
+                .add("coinSymbol", order.getCoinSymbol())
+                .add("amount", order.getAmount())
                 .build();
     }
 }

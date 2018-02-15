@@ -1,6 +1,6 @@
 package ch.khinkali.cryptowatch.sink.events.control;
 
-import ch.khinkali.cryptowatch.sink.events.entity.CoinEvent;
+import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 public class EventProducer {
-    private Producer<String, CoinEvent> producer;
+    private Producer<String, OrderPlaced> producer;
     private String topic;
 
     @Inject
@@ -34,8 +34,8 @@ public class EventProducer {
         producer.initTransactions();
     }
 
-    public void publish(CoinEvent event) {
-        final ProducerRecord<String, CoinEvent> record = new ProducerRecord<>(topic, event);
+    public void publish(OrderPlaced event) {
+        final ProducerRecord<String, OrderPlaced> record = new ProducerRecord<>(topic, event);
         try {
             producer.beginTransaction();
             producer.send(record);

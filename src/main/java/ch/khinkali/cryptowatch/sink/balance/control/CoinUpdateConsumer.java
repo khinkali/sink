@@ -1,7 +1,7 @@
 package ch.khinkali.cryptowatch.sink.balance.control;
 
 import ch.khinkali.cryptowatch.sink.events.control.CoinEventConsumer;
-import ch.khinkali.cryptowatch.sink.events.entity.CoinEvent;
+import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -28,7 +28,7 @@ public class CoinUpdateConsumer {
     Properties kafkaProperties;
 
     @Inject
-    Event<CoinEvent> events;
+    Event<OrderPlaced> events;
 
     @Inject
     Logger logger;

@@ -46,7 +46,6 @@ podTemplate(label: 'mypod', containers: [
                     sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/khinkali/sink.git --tags"
                 }
 
-
                 container('docker') {
                     sh "docker build -t khinkali/sink:${env.VERSION} ."
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
