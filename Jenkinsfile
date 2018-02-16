@@ -81,7 +81,7 @@ podTemplate(label: 'mypod', containers: [
                         sh "mvn -s settings.xml clean jmeter:jmeter -Dlt.domain=${HOST} -Dlt.port=${PORT}"
                     }
                 }
-                archiveArtifacts artifacts: 'target/reports/*.*', fingerprint: true
+                archiveArtifacts artifacts: 'target/jmeter/reports/*.*', fingerprint: true
             }
 
             stage('deploy to prod') {
