@@ -85,7 +85,7 @@ podTemplate(label: 'mypod', containers: [
                         echo "tokenAll: ${tokenAll}"
                         def data = readJSON text: "${tokenAll}"
                         echo "token: ${data.access_token}"
-                        sh "mvn -s settings.xml clean jmeter:jmeter -Dlt.domain=${HOST} -Dlt.port=${PORT} -Dlt.keycloak_token=${data.access_token} -Dlt.path=/sink/resources/users"
+                        sh "mvn -s settings.xml clean jmeter:jmeter -Dlt.domain=${HOST} -Dlt.port=${PORT} -Dlt.keycloak_token=${data.access_token} -Dlt.path=/sink/resources/users lt.threads=20"
                         sh "mvn -s settings.xml jmeter-analysis:analyze"
                     }
                 }
