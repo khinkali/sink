@@ -28,10 +28,14 @@ public class EventProducer {
 
     @PostConstruct
     private void init() {
-        kafkaProperties.put("transactional.id", UUID.randomUUID().toString());
-        producer = new KafkaProducer<>(kafkaProperties);
-        topic = kafkaProperties.getProperty("coins.topic");
-        producer.initTransactions();
+        try {
+            kafkaProperties.put("transactional.id", UUID.randomUUID().toString());
+            producer = new KafkaProducer<>(kafkaProperties);
+            topic = kafkaProperties.getProperty("coins.topic");
+            producer.initTransactions();
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+        }
     }
 
     public void publish(OrderPlaced event) {
@@ -41,8 +45,10 @@ public class EventProducer {
             producer.send(record);
             producer.commitTransaction();
         } catch (ProducerFencedException e) {
+            logger.severe(e.getMessage());
             producer.close();
         } catch (KafkaException e) {
+            logger.severe(e.getMessage());
             producer.abortTransaction();
         }
     }
