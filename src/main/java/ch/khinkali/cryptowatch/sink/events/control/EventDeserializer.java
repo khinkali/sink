@@ -1,6 +1,6 @@
 package ch.khinkali.cryptowatch.sink.events.control;
 
-import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
+import ch.khinkali.cryptowatch.sink.events.entity.BaseEvent;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 
@@ -10,7 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class EventDeserializer implements Deserializer<OrderPlaced> {
+public class EventDeserializer implements Deserializer<BaseEvent> {
     private static final Logger logger = Logger.getLogger(EventDeserializer.class.getName());
 
     @Override
@@ -19,10 +19,11 @@ public class EventDeserializer implements Deserializer<OrderPlaced> {
     }
 
     @Override
-    public OrderPlaced deserialize(final String topic, final byte[] data) {
+    public BaseEvent deserialize(final String topic, final byte[] data) {
         try (ByteArrayInputStream input = new ByteArrayInputStream(data)) {
             final JsonObject jsonObject = Json.createReader(input).readObject();
-            return new OrderPlaced(jsonObject);
+            final Class<? extends BaseEvent> eventClass = (Class<? extends BaseEvent>) Class.forName(jsonObject.getString("class"));
+            return eventClass.getConstructor(JsonObject.class).newInstance(jsonObject.getJsonObject("data"));
         } catch (Exception e) {
             logger.severe("Could not deserialize event: " + e.getMessage());
             throw new SerializationException("Could not deserialize event", e);

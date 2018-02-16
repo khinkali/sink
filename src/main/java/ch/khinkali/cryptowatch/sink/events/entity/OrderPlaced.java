@@ -7,7 +7,7 @@ import javax.json.JsonObject;
 
 @AllArgsConstructor
 @Getter
-public class OrderPlaced {
+public class OrderPlaced extends BaseEvent {
     private final String orderId;
     private final String coinSymbol;
     private final Double amount;

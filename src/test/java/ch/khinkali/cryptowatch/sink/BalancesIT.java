@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.Entity;
@@ -27,7 +28,7 @@ public class BalancesIT {
 
     @Rule
     public JAXRSClientProvider provider =
-            buildWithURI("http://" + System.getenv("HOST") + ":" + System.getenv("PORT") + "/sink/resources/balances");
+            buildWithURI("http://" + System.getenv("HOST") + ":" + System.getenv("PORT") + "/sink/resources");
 
     @After
     public void tearUp() {
@@ -52,6 +53,7 @@ public class BalancesIT {
 
         Response postResponse = provider
                 .target()
+                .path("balances")
                 .request()
                 .header("Authorization", "Bearer " + getToken())
                 .post(Entity.json(coinToAdd));
@@ -68,11 +70,20 @@ public class BalancesIT {
                 .request()
                 .header("Authorization", "Bearer " + getToken())
                 .get(JsonObject.class);
-
-        System.out.println("coin = " + coin);
-
         assertThat(coin.getString("coinSymbol"), is("BTC"));
         assertThat(coin.getJsonNumber("amount").doubleValue(), is(2.2));
+    }
+
+    @Test
+    public void a03_shouldReturnAllUsers() throws IOException {
+        JsonArray users = provider
+                .target()
+                .path("users")
+                .request()
+                .header("Authorization", "Bearer " + getToken())
+                .get(JsonArray.class);
+
+        System.out.println("users = " + users);
     }
 
 }

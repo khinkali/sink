@@ -1,6 +1,6 @@
 package ch.khinkali.cryptowatch.sink.events.control;
 
-import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
+import ch.khinkali.cryptowatch.sink.events.entity.BaseEvent;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -13,11 +13,11 @@ import java.util.function.Consumer;
 import static java.util.Arrays.asList;
 
 public class CoinEventConsumer implements Runnable {
-    private final KafkaConsumer<String, OrderPlaced> consumer;
-    private final Consumer<OrderPlaced> eventConsumer;
+    private final KafkaConsumer<String, BaseEvent> consumer;
+    private final Consumer<BaseEvent> eventConsumer;
     private final AtomicBoolean closed = new AtomicBoolean();
 
-    public CoinEventConsumer(Properties kafkaProperties, Consumer<OrderPlaced> eventConsumer, String... topics) {
+    public CoinEventConsumer(Properties kafkaProperties, Consumer<BaseEvent> eventConsumer, String... topics) {
         this.eventConsumer = eventConsumer;
         consumer = new KafkaConsumer<>(kafkaProperties);
         consumer.subscribe(asList(topics));
@@ -37,8 +37,8 @@ public class CoinEventConsumer implements Runnable {
     }
 
     private void consume() {
-        ConsumerRecords<String, OrderPlaced> records = consumer.poll(Long.MAX_VALUE);
-        for (ConsumerRecord<String, OrderPlaced> record : records) {
+        ConsumerRecords<String, BaseEvent> records = consumer.poll(Long.MAX_VALUE);
+        for (ConsumerRecord<String, BaseEvent> record : records) {
             eventConsumer.accept(record.value());
         }
         consumer.commitSync();

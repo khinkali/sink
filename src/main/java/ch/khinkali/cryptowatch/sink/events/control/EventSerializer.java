@@ -1,6 +1,8 @@
 package ch.khinkali.cryptowatch.sink.events.control;
 
+import ch.khinkali.cryptowatch.sink.events.entity.BaseEvent;
 import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
+import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
 
 import javax.json.bind.Jsonb;
@@ -22,16 +24,18 @@ public class EventSerializer implements Serializer<OrderPlaced> {
     @Override
     public byte[] serialize(final String topic, final OrderPlaced event) {
         try {
-            if (event == null) {
+            if (event == null)
                 return null;
-            }
 
-            JsonbConfig nillableConfig = new JsonbConfig().withNullValues(true);
-            Jsonb jsonb = JsonbBuilder.create(nillableConfig);
-            return jsonb.toJson(event).getBytes(StandardCharsets.UTF_8);
+            final JsonbConfig config = new JsonbConfig()
+                    .withSerializers(new EventJsonbSerializer());
+
+            final Jsonb jsonb = JsonbBuilder.create(config);
+
+            return jsonb.toJson(event, BaseEvent.class).getBytes(StandardCharsets.UTF_8);
         } catch (Exception e) {
             logger.severe("Could not serialize event: " + e.getMessage());
-            throw new org.apache.kafka.common.errors.SerializationException("Could not serialize event", e);
+            throw new SerializationException("Could not serialize event", e);
         }
     }
 
