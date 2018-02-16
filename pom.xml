@@ -108,6 +108,7 @@
                         <goals>
                             <goal>jmeter</goal>
                         </goals>
+                        <phase>post-integration-test</phase>
                     </execution>
                 </executions>
             </plugin>

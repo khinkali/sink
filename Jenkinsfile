@@ -69,7 +69,7 @@ podTemplate(label: 'mypod', containers: [
             stage('system tests') {
                 withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
                     container('maven') {
-                        sh "mvn -s settings.xml clean verify failsafe:integration-test failsafe:verify"
+                        sh "mvn -s settings.xml clean integration-test failsafe:integration-test failsafe:verify"
                     }
                 }
                 junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
