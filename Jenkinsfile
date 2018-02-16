@@ -79,9 +79,10 @@ podTemplate(label: 'mypod', containers: [
                 withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
                     container('maven') {
                         sh "mvn -s settings.xml clean jmeter:jmeter -Dlt.domain=${HOST} -Dlt.port=${PORT}"
+                        sh "mvn -s settings.xml jmeter-analysis:analyze"
                     }
                 }
-                archiveArtifacts artifacts: 'target/jmeter/reports/*.*', fingerprint: true
+                archiveArtifacts artifacts: 'target/reports/*.*', fingerprint: true
             }
 
             stage('deploy to prod') {

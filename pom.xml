@@ -91,6 +91,8 @@
                 <artifactId>jmeter-maven-plugin</artifactId>
                 <version>2.6.0</version>
                 <configuration>
+                    <resultsFileFormat>xml</resultsFileFormat>
+                    <generateReports>false</generateReports>
                     <propertiesUser>
                         <domain>${lt.domain}</domain>
                         <port>${lt.port}</port>
@@ -108,6 +110,23 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-analysis-maven-plugin</artifactId>
+                <version>1.0.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>analyze</goal>
+                        </goals>
+                        <phase>post-integration-test</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>${project.build.directory}/jmeter/results/*</source>
+                    <targetDirectory>${project.build.directory}/reports</targetDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>
