@@ -30,9 +30,12 @@ public class EventProducer {
     private void init() {
         try {
             kafkaProperties.put("transactional.id", UUID.randomUUID().toString());
+            logger.info("init");
             producer = new KafkaProducer<>(kafkaProperties);
+            logger.info("after KafkaProducer");
             topic = kafkaProperties.getProperty("coins.topic");
             producer.initTransactions();
+            logger.info("after initTX");
         } catch (Exception e) {
             logger.severe(e.getMessage());
         }
