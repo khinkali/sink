@@ -75,6 +75,15 @@ podTemplate(label: 'mypod', containers: [
                 junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
             }
 
+            stage('last test') {
+                withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
+                    container('maven') {
+                        sh "mvn -s settings.xml clean jmeter:jmeter -Dlt.domain=${HOST} -Dlt.port=${PORT}"
+                    }
+                }
+                archiveArtifacts artifacts: 'target/reports/*.*', fingerprint: true
+            }
+
             stage('deploy to prod') {
                 input(message: 'manuel user tests ok?' )
                 withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {

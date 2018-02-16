@@ -85,10 +85,42 @@
     </dependencies>
     <build>
         <finalName>sink</finalName>
+        <plugins>
+            <plugin>
+                <groupId>com.lazerycode.jmeter</groupId>
+                <artifactId>jmeter-maven-plugin</artifactId>
+                <version>2.6.0</version>
+                <configuration>
+                    <propertiesUser>
+                        <domain>${lt.domain}</domain>
+                        <port>${lt.port}</port>
+                        <path>${lt.path}</path>
+                        <threads>${lt.threads}</threads>
+                        <iterations>${lt.iterations}</iterations>
+                        <ramp_time>${lt.ramp_time}</ramp_time>
+                    </propertiesUser>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jmeter-tests</id>
+                        <goals>
+                            <goal>jmeter</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <failOnMissingWebXml>false</failOnMissingWebXml>
+
+        <lt.domain>localhost</lt.domain>
+        <lt.port>8080</lt.port>
+        <lt.path>/sink/resources/health</lt.path>
+        <lt.threads>5</lt.threads>
+        <lt.iterations>100</lt.iterations>
+        <lt.ramp_time>1</lt.ramp_time>
     </properties>
 </project>
