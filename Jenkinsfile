@@ -78,7 +78,12 @@ podTemplate(label: 'mypod', containers: [
             stage('last test') {
                 withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
                     container('maven') {
-                        sh "mvn -s settings.xml clean jmeter:jmeter -Dlt.domain=${HOST} -Dlt.port=${PORT}"
+                        def token = sh(
+                                script: "curl -k -v -X POST -H \"Content-Type: application/x-www-form-urlencoded\" -d \"username=${APPLICATION_USER_NAME}\" -d \"password=${APPLICATION_PASSWORD}\" -d 'grant_type=password' -d \"client_id=sink-frontend\" http://18.196.37.97:31190/auth/realms/cryptowatch/protocol/openid-connect/token |jq .",
+                                returnStdout: true
+                        ).trim()
+                        echo "token: ${token}"
+                        sh "mvn -s settings.xml clean jmeter:jmeter -Dlt.domain=${HOST} -Dlt.port=${PORT} -Dlt.keycloak_token=${token}"
                         sh "mvn -s settings.xml jmeter-analysis:analyze"
                     }
                 }

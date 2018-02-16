@@ -100,6 +100,7 @@
                         <threads>${lt.threads}</threads>
                         <iterations>${lt.iterations}</iterations>
                         <ramp_time>${lt.ramp_time}</ramp_time>
+                        <keycloak_token>${lt.keycloak_token}</keycloak_token>
                     </propertiesUser>
                 </configuration>
                 <executions>
@@ -142,5 +143,6 @@
         <lt.threads>5</lt.threads>
         <lt.iterations>100</lt.iterations>
         <lt.ramp_time>1</lt.ramp_time>
+        <lt.keycloak_token>TOKEN</lt.keycloak_token>
     </properties>
 </project>
