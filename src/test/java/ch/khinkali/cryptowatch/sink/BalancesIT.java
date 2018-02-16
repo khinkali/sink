@@ -43,7 +43,7 @@ public class BalancesIT {
                 .getToken();
     }
 
-    @Test
+    @Test(timeout = 2_000L)
     public void a01_shouldAddBTC() throws IOException {
         JsonObjectBuilder userBuilder = Json.createObjectBuilder();
         JsonObject coinToAdd = userBuilder
@@ -62,7 +62,7 @@ public class BalancesIT {
         System.out.println("location = " + location);
     }
 
-    @Test
+    @Test(timeout = 1_000L)
     public void a02_shouldReturnBTC() throws IOException {
         JsonObject coin = provider
                 .client()
@@ -74,7 +74,7 @@ public class BalancesIT {
         assertThat(coin.getJsonNumber("amount").doubleValue(), is(2.2));
     }
 
-    @Test
+    @Test(timeout = 1_000L)
     public void a03_shouldReturnAllUsers() throws IOException {
         JsonArray users = provider
                 .target()
