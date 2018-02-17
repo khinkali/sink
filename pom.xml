@@ -139,7 +139,7 @@
 
         <lt.domain>localhost</lt.domain>
         <lt.port>8080</lt.port>
-        <lt.path>/sink/resources/health</lt.path>
+        <lt.path>/sink/resources</lt.path>
         <lt.threads>5</lt.threads>
         <lt.iterations>100</lt.iterations>
         <lt.ramp_time>1</lt.ramp_time>
