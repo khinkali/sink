@@ -4,8 +4,10 @@ import ch.khinkali.cryptowatch.sink.balance.entity.Coin;
 import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
 import ch.khinkali.cryptowatch.sink.user.entity.User;
 import ch.khinkali.cryptowatch.user.events.entity.UserCreated;
+import io.prometheus.client.Counter;
 import lombok.Getter;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.Singleton;
@@ -27,8 +29,17 @@ public class Users {
     @Getter
     private final Map<String, User> users = new ConcurrentHashMap<>();
 
+    private Counter createdUsers;
+
+    @PostConstruct
+    public void initMetrics() {
+        createdUsers = Counter
+                .build("total_users_created", "Total user created")
+                .register();
+    }
+
     public void apply(@Observes UserCreated event) {
-        logger.info("userEvent: " + event);
+        createdUsers.inc();
         users.put(event.getUserId(), new User(event.getUserId(), event.getUsername()));
     }
 

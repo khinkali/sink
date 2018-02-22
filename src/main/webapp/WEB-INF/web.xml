@@ -13,6 +13,14 @@
 
     <security-constraint>
         <web-resource-collection>
+            <web-resource-name>health</web-resource-name>
+            <url-pattern>/resources/metrics</url-pattern>
+        </web-resource-collection>
+        <!-- OMIT auth-constraint -->
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
             <web-resource-name>cors</web-resource-name>
             <url-pattern>/*</url-pattern>
             <http-method>GET</http-method>
