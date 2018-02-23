@@ -1,17 +1,18 @@
-@Library('semantic_releasing')_
+@Library('semantic_releasing') _
 
 podTemplate(label: 'mypod', containers: [
-    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'curl', image: 'khinkali/jenkinstemplate:0.0.3', command: 'cat', ttyEnabled: true),
-    containerTemplate(name: 'maven', image: 'maven:3.5.2-jdk-8', command: 'cat', ttyEnabled: true)
-  ],
-  volumes: [
-    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-  ]) {
-    withEnv([   "HOST=18.196.37.97",
-                "PORT=31081",
-                "KEYCLOAK_URL=http://18.196.37.97:31190/auth"]) {
+        containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
+        containerTemplate(name: 'curl', image: 'khinkali/jenkinstemplate:0.0.3', command: 'cat', ttyEnabled: true),
+        containerTemplate(name: 'maven', image: 'maven:3.5.2-jdk-8', command: 'cat', ttyEnabled: true)
+],
+        volumes: [
+                hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+        ]) {
+    withEnv(['HOST=18.196.37.97',
+             'PORT=31081',
+             'KEYCLOAK_URL=http://18.196.37.97:31190/auth',
+             'APPLICATION_USER_ID=e3c92a6e-e085-4887-bc11-58e6540d8a97']) {
         node('mypod') {
             def mvnHome = tool 'M3'
             env.PATH = "${mvnHome}/bin/:${env.PATH}"
@@ -93,7 +94,7 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('deploy to prod') {
-                input(message: 'manuel user tests ok?' )
+                input(message: 'manuel user tests ok?')
                 withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
                     container('curl') {
                         gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
