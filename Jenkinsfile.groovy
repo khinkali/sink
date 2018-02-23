@@ -38,6 +38,9 @@ podTemplate(label: 'mypod', containers: [
             stage('build image & git tag & docker push') {
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
+                def build = currentBuild.rawBuild
+                def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
+                currentBuild.description = cause.getUserName()
 
                 sh "mvn versions:set -DnewVersion=${env.VERSION}"
                 sh "git config user.email \"jenkins@khinkali.ch\""
@@ -94,7 +97,8 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('deploy to prod') {
-                input(message: 'manuel user tests ok?')
+                input(message: 'manuel user tests ok?', submitterParameter: 'submitter')
+                currentBuild.description = feedback.submitter
                 withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
                     container('curl') {
                         gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
