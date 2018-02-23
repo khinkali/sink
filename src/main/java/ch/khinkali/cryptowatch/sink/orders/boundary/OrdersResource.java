@@ -1,4 +1,4 @@
-package ch.khinkali.cryptowatch.sink.balance.boundary;
+package ch.khinkali.cryptowatch.sink.orders.boundary;
 
 import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
 
@@ -13,8 +13,8 @@ import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Path("balances")
-public class BalancesResource {
+@Path("orders")
+public class OrdersResource {
 
     @Inject
     Logger logger;
@@ -23,16 +23,16 @@ public class BalancesResource {
     UriInfo uriInfo;
 
     @Inject
-    BalancesCommandService commandService;
+    OrdersCommandService commandService;
 
     @Inject
-    BalancesQueryService queryService;
+    OrdersQueryService queryService;
 
     @Context
     private SecurityContext securityContext;
 
     @POST
-    public Response orderCoin(JsonObject order) {
+    public Response order(JsonObject order) {
         final String coinSymbol = order.getString("coinSymbol", null);
         final Double amount = order.getJsonNumber("amount").doubleValue();
         final String userId = securityContext.getUserPrincipal().getName();
@@ -46,7 +46,7 @@ public class BalancesResource {
 
         final URI uri = uriInfo
                 .getRequestUriBuilder()
-                .path(BalancesResource.class, "getOrder")
+                .path(OrdersResource.class, "getOrder")
                 .build(orderId);
         return Response.accepted().header(HttpHeaders.LOCATION, uri).build();
     }

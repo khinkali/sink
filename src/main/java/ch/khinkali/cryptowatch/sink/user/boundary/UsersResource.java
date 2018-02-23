@@ -1,6 +1,6 @@
 package ch.khinkali.cryptowatch.sink.user.boundary;
 
-import ch.khinkali.cryptowatch.sink.balance.entity.Coin;
+import ch.khinkali.cryptowatch.sink.orders.entity.Coin;
 import ch.khinkali.cryptowatch.sink.user.control.Users;
 import ch.khinkali.cryptowatch.sink.user.entity.User;
 

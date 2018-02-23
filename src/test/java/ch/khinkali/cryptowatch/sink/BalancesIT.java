@@ -53,7 +53,7 @@ public class BalancesIT {
 
         Response postResponse = provider
                 .target()
-                .path("balances")
+                .path("orders")
                 .request()
                 .header("Authorization", "Bearer " + getToken())
                 .post(Entity.json(coinToAdd));

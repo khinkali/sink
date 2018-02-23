@@ -12,12 +12,12 @@ import java.util.function.Consumer;
 
 import static java.util.Arrays.asList;
 
-public class CoinEventConsumer implements Runnable {
+public class OrdersEventConsumer implements Runnable {
     private final KafkaConsumer<String, BaseEvent> consumer;
     private final Consumer<BaseEvent> eventConsumer;
     private final AtomicBoolean closed = new AtomicBoolean();
 
-    public CoinEventConsumer(Properties kafkaProperties, Consumer<BaseEvent> eventConsumer, String... topics) {
+    public OrdersEventConsumer(Properties kafkaProperties, Consumer<BaseEvent> eventConsumer, String... topics) {
         this.eventConsumer = eventConsumer;
         consumer = new KafkaConsumer<>(kafkaProperties);
         consumer.subscribe(asList(topics));

@@ -1,6 +1,6 @@
 package ch.khinkali.cryptowatch.sink.user.control;
 
-import ch.khinkali.cryptowatch.sink.balance.entity.Coin;
+import ch.khinkali.cryptowatch.sink.orders.entity.Coin;
 import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
 import ch.khinkali.cryptowatch.sink.user.entity.User;
 import ch.khinkali.cryptowatch.user.events.entity.UserCreated;

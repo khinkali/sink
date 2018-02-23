@@ -1,6 +1,6 @@
 package ch.khinkali.cryptowatch.sink.user.entity;
 
-import ch.khinkali.cryptowatch.sink.balance.entity.Coin;
+import ch.khinkali.cryptowatch.sink.orders.entity.Coin;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

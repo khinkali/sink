@@ -1,4 +1,4 @@
-package ch.khinkali.cryptowatch.sink.balance.entity;
+package ch.khinkali.cryptowatch.sink.orders.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

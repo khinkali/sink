@@ -1,4 +1,4 @@
-package ch.khinkali.cryptowatch.sink.balance.control;
+package ch.khinkali.cryptowatch.sink.orders.control;
 
 import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
 import io.prometheus.client.Counter;
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 @Startup
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
-public class CoinOrders {
+public class Orders {
 
     private Map<String, OrderPlaced> orders = new ConcurrentHashMap<>();
 
