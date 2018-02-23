@@ -98,8 +98,7 @@ podTemplate(label: 'mypod', containers: [
 
             stage('deploy to prod') {
                 def feedback = input(message: 'manuel user tests ok?', submitterParameter: 'submitter')
-                echo "feedback ${feedback}"
-                currentBuild.description = "${feedback.submitter}"
+                currentBuild.description = "${feedback}"
                 withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
                     container('curl') {
                         gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
