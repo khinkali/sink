@@ -1,7 +1,9 @@
 package ch.khinkali.cryptowatch.sink;
 
 import ch.khinkali.cryptowatch.sink.security.KeycloakHeaderCreator;
+import ch.khinkali.cryptowatch.sink.users.entity.User;
 import com.airhacks.rulz.jaxrsclient.JAXRSClientProvider;
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
@@ -18,6 +20,7 @@ import java.io.IOException;
 
 import static com.airhacks.rulz.jaxrsclient.JAXRSClientProvider.buildWithURI;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -57,9 +60,8 @@ public class BalancesIT {
                 .request()
                 .header("Authorization", "Bearer " + getToken())
                 .post(Entity.json(coinToAdd));
-        assertThat(postResponse.getStatus(), is(202));
+        assertThat(postResponse.getStatus(), is(HttpStatus.SC_ACCEPTED));
         location = postResponse.getHeaderString(LOCATION);
-        System.out.println("location = " + location);
     }
 
     @Test(timeout = 1_000L)
@@ -82,8 +84,50 @@ public class BalancesIT {
                 .request()
                 .header("Authorization", "Bearer " + getToken())
                 .get(JsonArray.class);
+        assertFalse(users.isEmpty());
+    }
 
-        System.out.println("users = " + users);
+    @Test(timeout = 1_000L)
+    public void a04_shouldFailWithoutBearerToken() {
+        JsonObjectBuilder userBuilder = Json.createObjectBuilder();
+        JsonObject coinToAdd = userBuilder
+                .add("coinSymbol", "BTC")
+                .add("amount", 2.2)
+                .build();
+
+        Response postResponse = provider
+                .target()
+                .path("orders")
+                .request()
+                .post(Entity.json(coinToAdd));
+        assertThat(postResponse.getStatus(), is(HttpStatus.SC_UNAUTHORIZED));
+    }
+
+    @Test(timeout = 1_000L)
+    public void a05_shouldReturnTestUser() throws IOException {
+        String userId = System.getenv("APPLICATION_USER_ID");
+        JsonObject user = provider
+                .target()
+                .path("users")
+                .path(userId)
+                .request()
+                .header("Authorization", "Bearer " + getToken())
+                .get(JsonObject.class);
+        assertThat(new User(user).getId(), is(userId));
+    }
+
+    @Test(timeout = 1_000L)
+    public void a06_shouldReturnTestUser() throws IOException {
+        String userId = System.getenv("APPLICATION_USER_ID");
+        JsonArray coins = provider
+                .target()
+                .path("users")
+                .path(userId)
+                .path("coins")
+                .request()
+                .header("Authorization", "Bearer " + getToken())
+                .get(JsonArray.class);
+        assertFalse(coins.isEmpty());
     }
 
 }

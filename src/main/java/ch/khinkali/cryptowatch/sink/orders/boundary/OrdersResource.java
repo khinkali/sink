@@ -9,15 +9,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Path("orders")
 public class OrdersResource {
-
-    @Inject
-    Logger logger;
 
     @Context
     UriInfo uriInfo;

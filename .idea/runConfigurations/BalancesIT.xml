@@ -27,6 +27,7 @@
       <env name="APPLICATION_USER_NAME" value="rob" />
       <env name="APPLICATION_PASSWORD" value="adesso" />
       <env name="KEYCLOAK_URL" value="http://localhost:8280/auth" />
+      <env name="APPLICATION_USER_ID" value="96ebd818-f899-4198-af13-0f51e6e38ce7" />
     </envs>
     <patterns />
     <method />

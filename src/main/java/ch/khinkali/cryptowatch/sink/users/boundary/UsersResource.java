@@ -39,4 +39,16 @@ public class UsersResource {
         return user.getJson();
     }
 
+    @GET
+    @Path("{id}/coins")
+    public JsonArray getUserCoins(@PathParam("id") String userId) {
+        User user = users.getUsers().get(userId);
+
+        if (user == null) {
+            throw new NotFoundException();
+        }
+
+        return user.getCoinsAsJson();
+    }
+
 }

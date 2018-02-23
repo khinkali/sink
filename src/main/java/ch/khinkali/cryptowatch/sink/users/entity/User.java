@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
+import javax.json.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +30,28 @@ public class User {
         this(id, username, new HashMap<>());
     }
 
+    public User(JsonObject json) {
+        coins.clear();
+        id = json.getString("id");
+        username = json.getString("username");
+        for (JsonValue value : json.getJsonArray("coins")) {
+            if (!(value instanceof JsonObject)) {
+                continue;
+            }
+            JsonObject coinJson = (JsonObject) value;
+            coins.put(new Coin(coinJson), coinJson.getJsonNumber("amount").doubleValue());
+        }
+    }
+
     public JsonObject getJson() {
+        return Json.createObjectBuilder()
+                .add("id", id)
+                .add("username", username)
+                .add("coins", getCoinsAsJson())
+                .build();
+    }
+
+    public JsonArray getCoinsAsJson() {
         JsonArrayBuilder userCoins = Json.createArrayBuilder();
         for (Coin coin : coins.keySet()) {
             JsonObject coinJson = Json.createObjectBuilder()
@@ -41,10 +60,6 @@ public class User {
                     .build();
             userCoins.add(coinJson);
         }
-        return Json.createObjectBuilder()
-                .add("id", id)
-                .add("username", username)
-                .add("coins", userCoins)
-                .build();
+        return userCoins.build();
     }
 }
