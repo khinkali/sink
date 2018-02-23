@@ -17,19 +17,19 @@ import java.util.Map;
 @Getter
 public class User {
     @Setter
-    private String userId;
+    private String id;
     @Setter
     private String username;
     private final Map<Coin, Double> coins = new HashMap<>();
 
-    public User(String userId, String username, Map<Coin, Double> coins) {
-        this.userId = userId;
+    public User(String id, String username, Map<Coin, Double> coins) {
+        this.id = id;
         this.username = username;
         this.coins.putAll(coins);
     }
 
-    public User(String userId, String username) {
-        this(userId, username, new HashMap<>());
+    public User(String id, String username) {
+        this(id, username, new HashMap<>());
     }
 
     public JsonObject getJson() {
@@ -42,7 +42,7 @@ public class User {
             userCoins.add(coinJson);
         }
         return Json.createObjectBuilder()
-                .add("userId", userId)
+                .add("id", id)
                 .add("username", username)
                 .add("coins", userCoins)
                 .build();
