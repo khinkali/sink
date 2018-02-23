@@ -49,8 +49,6 @@ podTemplate(label: 'mypod', containers: [
                 container('docker') {
                     sh "docker build -t khinkali/sink:${env.VERSION} ."
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                        sh "mkdir ${DOCKER_PASSWORD}"
-                        sh "ls -la"
                         sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
                     }
                     sh "docker push khinkali/sink:${env.VERSION}"
