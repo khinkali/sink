@@ -97,7 +97,7 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('deploy to prod') {
-                input(message: 'manuel user tests ok?', submitterParameter: 'submitter')
+                def feedback = input(message: 'manuel user tests ok?', submitterParameter: 'submitter')
                 currentBuild.description = "${feedback.submitter}"
                 withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
                     container('curl') {
