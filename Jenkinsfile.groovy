@@ -38,9 +38,9 @@ podTemplate(label: 'mypod', containers: [
             stage('build image & git tag & docker push') {
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
-                def build = currentBuild.rawBuild
-                def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
-                currentBuild.description = cause.getUserName()
+                wrap([$class: 'BuildUser']) {
+                    currentBuild.description = "${BUILD_USER} (${BUILD_USER_EMAIL})"
+                }
 
                 sh "mvn versions:set -DnewVersion=${env.VERSION}"
                 sh "git config user.email \"jenkins@khinkali.ch\""
