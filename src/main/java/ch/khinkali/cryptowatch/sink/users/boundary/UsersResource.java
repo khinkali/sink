@@ -1,6 +1,5 @@
 package ch.khinkali.cryptowatch.sink.users.boundary;
 
-import ch.khinkali.cryptowatch.sink.orders.entity.Coin;
 import ch.khinkali.cryptowatch.sink.users.control.Users;
 import ch.khinkali.cryptowatch.sink.users.entity.User;
 
@@ -9,9 +8,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Produces(MediaType.APPLICATION_JSON)
@@ -25,23 +22,21 @@ public class UsersResource {
     public JsonArray getUsers() {
         JsonArrayBuilder result = Json.createArrayBuilder();
         for (User user : users.getUsers().values()) {
-            JsonArrayBuilder coins = Json.createArrayBuilder();
-            for (Coin coin : user.getCoins().keySet()) {
-                JsonObject coinJson = Json.createObjectBuilder()
-                        .add("coinSymbol", coin.getCoinSymbol())
-                        .add("amount", user.getCoins().get(coin))
-                        .build();
-                coins.add(coinJson);
-            }
-
-            JsonObject userJson = Json.createObjectBuilder()
-                    .add("userId", user.getUserId())
-                    .add("username", user.getUsername())
-                    .add("coins", coins)
-                    .build();
-            result.add(userJson);
+            result.add(user.getJson());
         }
         return result.build();
+    }
+
+    @GET
+    @Path("{id}")
+    public JsonObject getUser(@PathParam("id") String userId) {
+        User user = users.getUsers().get(userId);
+
+        if (user == null) {
+            throw new NotFoundException();
+        }
+
+        return user.getJson();
     }
 
 }

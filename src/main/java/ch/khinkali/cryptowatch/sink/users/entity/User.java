@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,5 +30,21 @@ public class User {
 
     public User(String userId, String username) {
         this(userId, username, new HashMap<>());
+    }
+
+    public JsonObject getJson() {
+        JsonArrayBuilder userCoins = Json.createArrayBuilder();
+        for (Coin coin : coins.keySet()) {
+            JsonObject coinJson = Json.createObjectBuilder()
+                    .add("coinSymbol", coin.getCoinSymbol())
+                    .add("amount", coins.get(coin))
+                    .build();
+            userCoins.add(coinJson);
+        }
+        return Json.createObjectBuilder()
+                .add("userId", userId)
+                .add("username", username)
+                .add("coins", userCoins)
+                .build();
     }
 }
