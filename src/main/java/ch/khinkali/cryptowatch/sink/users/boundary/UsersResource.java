@@ -1,8 +1,8 @@
-package ch.khinkali.cryptowatch.sink.user.boundary;
+package ch.khinkali.cryptowatch.sink.users.boundary;
 
 import ch.khinkali.cryptowatch.sink.orders.entity.Coin;
-import ch.khinkali.cryptowatch.sink.user.control.Users;
-import ch.khinkali.cryptowatch.sink.user.entity.User;
+import ch.khinkali.cryptowatch.sink.users.control.Users;
+import ch.khinkali.cryptowatch.sink.users.entity.User;
 
 import javax.inject.Inject;
 import javax.json.Json;

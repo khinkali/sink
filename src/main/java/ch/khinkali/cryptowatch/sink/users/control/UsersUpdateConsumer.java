@@ -1,4 +1,4 @@
-package ch.khinkali.cryptowatch.sink.user.control;
+package ch.khinkali.cryptowatch.sink.users.control;
 
 import ch.khinkali.cryptowatch.user.events.boundary.UserEventConsumer;
 import ch.khinkali.cryptowatch.user.events.boundary.UserEventDeserializer;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 
 @Startup
 @Singleton
-public class UserUpdateConsumer {
+public class UsersUpdateConsumer {
 
     private UserEventConsumer eventConsumer;
 

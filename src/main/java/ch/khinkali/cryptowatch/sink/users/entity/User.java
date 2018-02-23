@@ -1,4 +1,4 @@
-package ch.khinkali.cryptowatch.sink.user.entity;
+package ch.khinkali.cryptowatch.sink.users.entity;
 
 import ch.khinkali.cryptowatch.sink.orders.entity.Coin;
 import lombok.EqualsAndHashCode;

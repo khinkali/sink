@@ -1,8 +1,8 @@
-package ch.khinkali.cryptowatch.sink.user.control;
+package ch.khinkali.cryptowatch.sink.users.control;
 
 import ch.khinkali.cryptowatch.sink.orders.entity.Coin;
 import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
-import ch.khinkali.cryptowatch.sink.user.entity.User;
+import ch.khinkali.cryptowatch.sink.users.entity.User;
 import ch.khinkali.cryptowatch.user.events.entity.UserCreated;
 import io.prometheus.client.Counter;
 import lombok.Getter;
