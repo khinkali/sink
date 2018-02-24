@@ -1,5 +1,6 @@
-package ch.khinkali.cryptowatch.sink.events.entity;
+package ch.khinkali.cryptowatch.sink.orders.entity;
 
+import ch.khinkali.cryptowatch.events.entity.BaseEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

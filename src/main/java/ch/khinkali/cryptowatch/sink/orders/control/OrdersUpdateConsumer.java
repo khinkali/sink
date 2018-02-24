@@ -1,7 +1,7 @@
 package ch.khinkali.cryptowatch.sink.orders.control;
 
-import ch.khinkali.cryptowatch.sink.events.control.OrdersEventConsumer;
-import ch.khinkali.cryptowatch.sink.events.entity.BaseEvent;
+import ch.khinkali.cryptowatch.events.boundary.EventConsumer;
+import ch.khinkali.cryptowatch.events.entity.BaseEvent;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 @Singleton
 public class OrdersUpdateConsumer {
 
-    private OrdersEventConsumer eventConsumer;
+    private EventConsumer eventConsumer;
 
     @Resource
     ManagedExecutorService mes;
@@ -36,12 +36,11 @@ public class OrdersUpdateConsumer {
     @PostConstruct
     private void init() {
         kafkaProperties.put("group.id", "order-consumer-" + UUID.randomUUID());
-        String orders = kafkaProperties.getProperty("coins.topic");
 
-        eventConsumer = new OrdersEventConsumer(kafkaProperties, ev -> {
+        eventConsumer = new EventConsumer(kafkaProperties, ev -> {
             logger.info("firing = " + ev);
             events.fire(ev);
-        }, orders);
+        }, "coins");
 
         mes.execute(eventConsumer);
     }

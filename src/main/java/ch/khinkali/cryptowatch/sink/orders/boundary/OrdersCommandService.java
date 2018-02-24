@@ -1,7 +1,7 @@
 package ch.khinkali.cryptowatch.sink.orders.boundary;
 
-import ch.khinkali.cryptowatch.sink.events.control.EventProducer;
-import ch.khinkali.cryptowatch.sink.events.entity.OrderPlaced;
+import ch.khinkali.cryptowatch.sink.EventProducer;
+import ch.khinkali.cryptowatch.sink.orders.entity.OrderPlaced;
 
 import javax.inject.Inject;
 import java.util.logging.Logger;
@@ -19,7 +19,7 @@ public class OrdersCommandService {
                            final Double amount,
                            final String userId) {
         logger.info("placeOder");
-        eventProducer.publish(new OrderPlaced(orderId, coinSymbol, amount, userId));
+        eventProducer.publish("coins", new OrderPlaced(orderId, coinSymbol, amount, userId));
     }
 
 }

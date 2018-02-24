@@ -21,9 +21,15 @@
 
         <dependency>
             <groupId>ch.khinkali.cryptowatch</groupId>
+            <artifactId>core.events</artifactId>
+            <version>0.0.6</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.khinkali.cryptowatch</groupId>
             <artifactId>user.events</artifactId>
             <version>0.0.4</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
