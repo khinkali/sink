@@ -7,7 +7,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 
 @Getter
-public class OrderPlaced extends BaseEvent {
+public class OrderPlaced implements BaseEvent {
     public static final String TOPIC = "coins";
 
     private final String orderId;

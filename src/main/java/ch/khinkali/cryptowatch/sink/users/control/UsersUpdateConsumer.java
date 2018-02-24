@@ -2,7 +2,7 @@ package ch.khinkali.cryptowatch.sink.users.control;
 
 import ch.khinkali.cryptowatch.events.boundary.EventConsumer;
 import ch.khinkali.cryptowatch.events.entity.BaseEvent;
-import ch.khinkali.cryptowatch.events.entity.UserCreated;
+import ch.khinkali.cryptowatch.user.events.entity.UserCreated;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
