@@ -39,7 +39,7 @@ podTemplate(label: 'mypod', containers: [
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
                 wrap([$class: 'BuildUser']) {
-                    currentBuild.description = "${BUILD_USER} (${BUILD_USER_EMAIL})"
+                    currentBuild.description = "Started by: ${BUILD_USER} (${BUILD_USER_EMAIL})"
                 }
 
                 sh "mvn versions:set -DnewVersion=${env.VERSION}"
@@ -98,7 +98,7 @@ podTemplate(label: 'mypod', containers: [
 
             stage('deploy to prod') {
                 def feedback = input(message: 'manuel user tests ok?', submitterParameter: 'submitter')
-                currentBuild.description = "${feedback}"
+                currentBuild.description = "${currentBuild.description}\nGo for Prod by: ${feedback}"
                 withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
                     container('curl') {
                         gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
