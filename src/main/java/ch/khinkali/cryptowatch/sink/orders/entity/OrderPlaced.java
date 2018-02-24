@@ -1,11 +1,13 @@
 package ch.khinkali.cryptowatch.sink.orders.entity;
 
 import ch.khinkali.cryptowatch.events.entity.BaseEvent;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 
+@AllArgsConstructor
 @Getter
 public class OrderPlaced implements BaseEvent {
     public static final String TOPIC = "coins";
@@ -14,16 +16,6 @@ public class OrderPlaced implements BaseEvent {
     private final String coinSymbol;
     private final Double amount;
     private final String userId;
-
-    public OrderPlaced(final String orderId,
-                       final String coinSymbol,
-                       final Double amount,
-                       final String userId) {
-        this.orderId = orderId;
-        this.coinSymbol = coinSymbol;
-        this.amount = amount;
-        this.userId = userId;
-    }
 
     public OrderPlaced(JsonObject jsonObject) {
         this(jsonObject.getString("orderId"),

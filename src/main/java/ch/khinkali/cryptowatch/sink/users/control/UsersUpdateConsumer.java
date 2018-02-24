@@ -36,7 +36,7 @@ public class UsersUpdateConsumer {
 
     @PostConstruct
     private void init() {
-        kafkaProperties.put("group.id", "order-consumer-" + UUID.randomUUID());
+        kafkaProperties.put("group.id", "user-consumer-" + UUID.randomUUID());
 
         eventConsumer = new EventConsumer(kafkaProperties, ev -> {
             logger.info("firing = " + ev);

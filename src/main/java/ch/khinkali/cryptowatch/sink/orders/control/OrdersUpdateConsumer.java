@@ -2,6 +2,7 @@ package ch.khinkali.cryptowatch.sink.orders.control;
 
 import ch.khinkali.cryptowatch.events.boundary.EventConsumer;
 import ch.khinkali.cryptowatch.events.entity.BaseEvent;
+import ch.khinkali.cryptowatch.sink.orders.entity.OrderPlaced;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -40,7 +41,7 @@ public class OrdersUpdateConsumer {
         eventConsumer = new EventConsumer(kafkaProperties, ev -> {
             logger.info("firing = " + ev);
             events.fire(ev);
-        }, "coins");
+        }, OrderPlaced.TOPIC);
 
         mes.execute(eventConsumer);
     }

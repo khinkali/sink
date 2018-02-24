@@ -19,7 +19,7 @@ public class OrdersCommandService {
                            final Double amount,
                            final String userId) {
         logger.info("placeOder");
-        eventProducer.publish("coins", new OrderPlaced(orderId, coinSymbol, amount, userId));
+        eventProducer.publish(OrderPlaced.TOPIC, new OrderPlaced(orderId, coinSymbol, amount, userId));
     }
 
 }
