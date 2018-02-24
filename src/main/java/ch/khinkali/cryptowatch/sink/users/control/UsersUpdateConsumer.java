@@ -1,8 +1,8 @@
 package ch.khinkali.cryptowatch.sink.users.control;
 
-import ch.khinkali.cryptowatch.user.events.boundary.UserEventConsumer;
-import ch.khinkali.cryptowatch.user.events.boundary.UserEventDeserializer;
-import ch.khinkali.cryptowatch.user.events.entity.UserCreated;
+import ch.khinkali.cryptowatch.events.boundary.EventConsumer;
+import ch.khinkali.cryptowatch.events.entity.BaseEvent;
+import ch.khinkali.cryptowatch.events.entity.UserCreated;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -20,29 +20,25 @@ import java.util.logging.Logger;
 @Singleton
 public class UsersUpdateConsumer {
 
-    private UserEventConsumer eventConsumer;
+    private EventConsumer eventConsumer;
 
     @Resource
     ManagedExecutorService mes;
 
     @Inject
-    Event<UserCreated> events;
+    Properties kafkaProperties;
+
+    @Inject
+    Event<BaseEvent> events;
 
     @Inject
     Logger logger;
 
     @PostConstruct
     private void init() {
-        Properties kafkaProperties = new Properties();
-        kafkaProperties.put("bootstrap.servers", System.getenv("KAFKA_ADDRESS"));
-        kafkaProperties.put("isolation.level", "read_committed");
-        kafkaProperties.put("enable.auto.commit", false);
-        kafkaProperties.put("auto.offset.reset", "earliest");
-        kafkaProperties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        kafkaProperties.put("value.deserializer", UserEventDeserializer.class.getCanonicalName());
-        kafkaProperties.put("group.id", "user-consumer-" + UUID.randomUUID());
+        kafkaProperties.put("group.id", "order-consumer-" + UUID.randomUUID());
 
-        eventConsumer = new UserEventConsumer(kafkaProperties, ev -> {
+        eventConsumer = new EventConsumer(kafkaProperties, ev -> {
             logger.info("firing = " + ev);
             events.fire(ev);
         }, UserCreated.TOPIC);

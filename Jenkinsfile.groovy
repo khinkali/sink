@@ -31,7 +31,6 @@ podTemplate(label: 'mypod', containers: [
                 git url: "https://github.com/khinkali/sink"
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     sh 'mvn -s settings.xml clean package'
-                    sh "mkdir nexus-${NEXUS_PASSWORD}"
                 }
                 junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
             }
@@ -49,7 +48,6 @@ podTemplate(label: 'mypod', containers: [
                 sh "git tag -a ${env.VERSION} -m \"${env.VERSION}\""
                 withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                     sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/khinkali/sink.git --tags"
-                    sh "mkdir github-${GIT_PASSWORD}"
                 }
 
                 container('docker') {
@@ -76,7 +74,6 @@ podTemplate(label: 'mypod', containers: [
                 withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
                     container('maven') {
                         sh "mvn -s settings.xml clean integration-test failsafe:integration-test failsafe:verify"
-                        sh "mkdir application-${APPLICATION_PASSWORD}"
                     }
                 }
                 junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
@@ -108,7 +105,6 @@ podTemplate(label: 'mypod', containers: [
                         container('curl') {
                             gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
                         }
-                        sh "mkdir github-api-token-${GITHUB_TOKEN}"
                     }
                     sh "sed -i -e 's/  namespace: test/  namespace: default/' startup.yml"
                     sh "sed -i -e 's/    nodePort: 31081/    nodePort: 30081/' startup.yml"
@@ -122,6 +118,7 @@ podTemplate(label: 'mypod', containers: [
                 } catch (err) {
                     def user = err.getCauses()[0].getUser()
                     currentBuild.description = "${currentBuild.description}\nNoGo for Prod by: ${user}"
+                    currentBuild.result = 'ABORTED'
                 }
             }
         }

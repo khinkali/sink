@@ -85,6 +85,7 @@ public class BalancesIT {
                 .header("Authorization", "Bearer " + getToken())
                 .get(JsonArray.class);
         assertFalse(users.isEmpty());
+        System.out.println("users = " + users);
     }
 
     @Test(timeout = 1_000L)
