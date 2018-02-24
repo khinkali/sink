@@ -13,15 +13,26 @@ import javax.json.JsonObject;
 @AllArgsConstructor
 @Getter
 public class Coin {
+    public enum JSON_KEYS {
+        COIN_SYMBOL("coinSymbol");
+
+        @Getter
+        String jsonKey;
+
+        JSON_KEYS(String jsonKey) {
+            this.jsonKey = jsonKey;
+        }
+    }
+
     private String coinSymbol;
 
     public Coin(JsonObject json) {
-        coinSymbol = json.getString("coinSymbol");
+        coinSymbol = json.getString(JSON_KEYS.COIN_SYMBOL.getJsonKey());
     }
 
     public JsonObject getJson() {
         return Json.createObjectBuilder()
-                .add("coinSymbol", coinSymbol)
+                .add(JSON_KEYS.COIN_SYMBOL.getJsonKey(), coinSymbol)
                 .build();
     }
 }

@@ -105,7 +105,7 @@ public class BalancesIT {
     }
 
     @Test(timeout = 1_000L)
-    public void a05_shouldReturnTestUser() throws IOException {
+    public void a05_shouldReturnAllUser() throws IOException {
         String userId = System.getenv("APPLICATION_USER_ID");
         JsonObject user = provider
                 .target()
@@ -118,7 +118,7 @@ public class BalancesIT {
     }
 
     @Test(timeout = 1_000L)
-    public void a06_shouldReturnTestUser() throws IOException {
+    public void a06_shouldReturnCoins() throws IOException {
         String userId = System.getenv("APPLICATION_USER_ID");
         JsonArray coins = provider
                 .target()

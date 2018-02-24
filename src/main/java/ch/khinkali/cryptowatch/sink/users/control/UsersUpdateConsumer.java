@@ -14,7 +14,6 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @Startup
 @Singleton
@@ -31,15 +30,11 @@ public class UsersUpdateConsumer {
     @Inject
     Event<BaseEvent> events;
 
-    @Inject
-    Logger logger;
-
     @PostConstruct
     private void init() {
         kafkaProperties.put("group.id", "user-consumer-" + UUID.randomUUID());
 
         eventConsumer = new EventConsumer(kafkaProperties, ev -> {
-            logger.info("firing = " + ev);
             events.fire(ev);
         }, UserCreated.TOPIC);
 

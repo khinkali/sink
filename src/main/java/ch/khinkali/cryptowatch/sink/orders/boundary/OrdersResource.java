@@ -29,8 +29,8 @@ public class OrdersResource {
 
     @POST
     public Response order(JsonObject order) {
-        final String coinSymbol = order.getString("coinSymbol", null);
-        final Double amount = order.getJsonNumber("amount").doubleValue();
+        final String coinSymbol = order.getString(OrderPlaced.JSON_KEYS.COIN_SYMBOL.getJsonKey(), null);
+        final Double amount = order.getJsonNumber(OrderPlaced.JSON_KEYS.AMOUNT.getJsonKey()).doubleValue();
         final String userId = securityContext.getUserPrincipal().getName();
 
         if (coinSymbol == null || amount == null) {
@@ -57,8 +57,8 @@ public class OrdersResource {
         }
 
         return Json.createObjectBuilder()
-                .add("coinSymbol", order.getCoinSymbol())
-                .add("amount", order.getAmount())
+                .add(OrderPlaced.JSON_KEYS.COIN_SYMBOL.getJsonKey(), order.getCoinSymbol())
+                .add(OrderPlaced.JSON_KEYS.AMOUNT.getJsonKey(), order.getAmount())
                 .build();
     }
 }
