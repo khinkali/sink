@@ -97,21 +97,27 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('deploy to prod') {
-                def feedback = input(message: 'manuel user tests ok?', submitterParameter: 'submitter')
-                currentBuild.description = "${currentBuild.description}\nGo for Prod by: ${feedback}"
-                withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
-                    container('curl') {
-                        gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
+                try {
+                    def userInput = input(message: 'manuel user tests ok?', submitterParameter: 'submitter')
+                    currentBuild.description = "${currentBuild.description}\nGo for Prod by: ${userInput}"
+
+                    withCredentials([usernamePassword(credentialsId: 'github-api-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')]) {
+                        container('curl') {
+                            gitHubRelease(env.VERSION, 'khinkali', 'sink', GITHUB_TOKEN)
+                        }
                     }
-                }
-                sh "sed -i -e 's/  namespace: test/  namespace: default/' startup.yml"
-                sh "sed -i -e 's/    nodePort: 31081/    nodePort: 30081/' startup.yml"
-                sh "sed -i -e 's/          value: \"http:\\/\\/18.196.37.97:31190\\/auth\"/          value: \"http:\\/\\/18.196.37.97:30190\\/auth\"/' startup.yml"
-                container('kubectl') {
-                    sh "kubectl apply -f startup.yml"
-                }
-                container('curl') {
-                    checkVersion(env.VERSION, 'http://18.196.37.97:30081/sink/resources/health')
+                    sh "sed -i -e 's/  namespace: test/  namespace: default/' startup.yml"
+                    sh "sed -i -e 's/    nodePort: 31081/    nodePort: 30081/' startup.yml"
+                    sh "sed -i -e 's/          value: \"http:\\/\\/18.196.37.97:31190\\/auth\"/          value: \"http:\\/\\/18.196.37.97:30190\\/auth\"/' startup.yml"
+                    container('kubectl') {
+                        sh "kubectl apply -f startup.yml"
+                    }
+                    container('curl') {
+                        checkVersion(env.VERSION, 'http://18.196.37.97:30081/sink/resources/health')
+                    }
+                } catch (err) {
+                    def user = err.getCauses()[0].getUser()
+                    currentBuild.description = "${currentBuild.description}\nNoGo for Prod by: ${user}"
                 }
             }
         }
