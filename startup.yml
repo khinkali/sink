@@ -23,7 +23,7 @@ spec:
         - name: KAFKA_ADDRESS
           value: "kafka:9092"
         - name: KEYCLOAK_URL
-          value: "http://18.196.37.97:31190/auth"
+          value: "http://5.189.154.24:31190/auth"
         - name: VERSION
           value: "0.0.1"
         ports:
