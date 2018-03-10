@@ -9,9 +9,9 @@ podTemplate(label: 'mypod', containers: [
         volumes: [
                 hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
         ]) {
-    withEnv(['HOST=18.196.37.97',
+    withEnv(['HOST=5.189.154.24',
              'PORT=31081',
-             'KEYCLOAK_URL=http://18.196.37.97:31190/auth',
+             'KEYCLOAK_URL=http://5.189.154.24:31190/auth',
              'APPLICATION_USER_ID=e3c92a6e-e085-4887-bc11-58e6540d8a97']) {
         node('mypod') {
             def mvnHome = tool 'M3'
@@ -83,7 +83,7 @@ podTemplate(label: 'mypod', containers: [
                 withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
                     container('maven') {
                         def tokenAll = sh(
-                                script: "curl -k -v -X POST -H \"Content-Type: application/x-www-form-urlencoded\" -d \"username=${APPLICATION_USER_NAME}\" -d \"password=${APPLICATION_PASSWORD}\" -d 'grant_type=password' -d \"client_id=sink-frontend\" http://18.196.37.97:31190/auth/realms/cryptowatch/protocol/openid-connect/token",
+                                script: "curl -k -v -X POST -H \"Content-Type: application/x-www-form-urlencoded\" -d \"username=${APPLICATION_USER_NAME}\" -d \"password=${APPLICATION_PASSWORD}\" -d 'grant_type=password' -d \"client_id=sink-frontend\" http://5.189.154.24:31190/auth/realms/cryptowatch/protocol/openid-connect/token",
                                 returnStdout: true
                         ).trim()
                         echo "tokenAll: ${tokenAll}"
