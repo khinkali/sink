@@ -108,12 +108,12 @@ podTemplate(label: 'mypod', containers: [
                     }
                     sh "sed -i -e 's/namespace: test/namespace: default/' startup.yml"
                     sh "sed -i -e 's/nodePort: 31081/nodePort: 30081/' startup.yml"
-                    sh "sed -i -e 's/value: \"http:\\/\\/18.196.37.97:31190\\/auth\"/value: \"http:\\/\\/18.196.37.97:30190\\/auth\"/' startup.yml"
+                    sh "sed -i -e 's/value: \"http:\\/\\/5.189.154.24:31190\\/auth\"/value: \"http:\\/\\/5.189.154.24:30190\\/auth\"/' startup.yml"
                     container('kubectl') {
                         sh "kubectl apply -f startup.yml"
                     }
                     container('curl') {
-                        checkVersion(env.VERSION, 'http://18.196.37.97:30081/sink/resources/health')
+                        checkVersion(env.VERSION, 'http://5.189.154.24:30081/sink/resources/health')
                     }
                 } catch (err) {
                     def user = err.getCauses()[0].getUser()
