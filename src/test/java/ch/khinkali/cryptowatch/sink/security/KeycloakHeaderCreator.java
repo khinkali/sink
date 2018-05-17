@@ -21,7 +21,7 @@ import java.util.List;
 
 public class KeycloakHeaderCreator {
 
-    public static final String CLIENT_ID = "sink-frontend";
+    public static final String CLIENT_ID = "cockpit";
     public static final String REALM = "cryptowatch";
     public static final String KEYCLOAK_URL = System.getenv("KEYCLOAK_URL");
 
