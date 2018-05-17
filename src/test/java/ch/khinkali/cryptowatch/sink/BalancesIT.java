@@ -117,7 +117,7 @@ public class BalancesIT {
         assertThat(new User(user).getId(), is(userId));
     }
 
-    @Test(timeout = 1_000L)
+    @Test(timeout = 10_000L)
     public void a06_shouldReturnCoins() throws IOException {
         String userId = System.getenv("APPLICATION_USER_ID");
         JsonArray coins = provider
