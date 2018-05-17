@@ -80,6 +80,7 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('last test') {
+                /*
                 withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
                     container('maven') {
                         def tokenAll = sh(
@@ -94,6 +95,7 @@ podTemplate(label: 'mypod', containers: [
                     }
                 }
                 archiveArtifacts artifacts: 'target/reports/*.*', fingerprint: true
+                */
             }
 
             stage('deploy to prod') {
