@@ -88,7 +88,7 @@ podTemplate(label: 'mypod', containers: [
                         }
                         archiveArtifacts artifacts: 'target/gatling/**/*.*', fingerprint: true
                         sh 'mkdir site'
-                        sh 'cp -r target/gatling/healthsimulation* site'
+                        sh 'cp -r target/gatling/healthsimulation*/* site'
                     }
 
                     stage('Build Report Image') {
