@@ -89,10 +89,12 @@ podTemplate(label: 'mypod', containers: [
                         archiveArtifacts artifacts: 'target/gatling/**/*.*', fingerprint: true
                         sh 'mkdir site'
                         sh 'cp -r target/gatling/healthsimulation* site'
+                        sh 'ls -la'
                     }
 
                     stage('Build Report Image') {
                         container('docker') {
+                            sh 'ls -la'
                             sh "docker build -t khinkali/sink-testing:${env.VERSION} ."
                             withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                                 sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
