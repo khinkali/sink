@@ -87,7 +87,8 @@ podTemplate(label: 'mypod', containers: [
                             sh 'mvn clean gatling:integration-test'
                         }
                         archiveArtifacts artifacts: 'target/gatling/**/*.*', fingerprint: true
-                        sh 'cp -r target/gatling/healthsimulation* target/site'
+                        sh 'mkdir site'
+                        sh 'cp -r target/gatling/healthsimulation* site'
                     }
 
                     stage('Build Report Image') {
