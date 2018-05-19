@@ -28,7 +28,7 @@ podTemplate(label: 'mypod', containers: [
             ])
 
             stage('checkout & unit tests & build') {
-                git url: "https://github.com/khinkali/sink"
+                git url: 'https://github.com/khinkali/sink'
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     sh 'mvn -s settings.xml clean package'
                 }
@@ -80,22 +80,34 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('last test') {
-                /*
-                withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
-                    container('maven') {
-                        def tokenAll = sh(
-                                script: "curl -k -v -X POST -H \"Content-Type: application/x-www-form-urlencoded\" -d \"username=${APPLICATION_USER_NAME}\" -d \"password=${APPLICATION_PASSWORD}\" -d 'grant_type=password' -d \"client_id=sink-frontend\" http://5.189.154.24:31190/auth/realms/cryptowatch/protocol/openid-connect/token",
-                                returnStdout: true
-                        ).trim()
-                        echo "tokenAll: ${tokenAll}"
-                        def data = readJSON text: "${tokenAll}"
-                        echo "token: ${data.access_token}"
-                        sh "mvn -s settings.xml clean jmeter:jmeter -Dlt.domain=${HOST} -Dlt.port=${PORT} -Dlt.keycloak_token=${data.access_token} -Dlt.path=/sink/resources -Dlt.threads=20"
-                        sh "mvn -s settings.xml jmeter-analysis:analyze"
+                directory('testing') {
+                    stage('Performance Tests') {
+                        git url: 'https://github.com/khinkali/sink-testing'
+                        container('maven') {
+                            sh 'mvn clean gatling:integration-test'
+                        }
+                        archiveArtifacts artifacts: 'target/gatling/**/*.*', fingerprint: true
+                        sh 'cp -r target/gatling/healthsimulation* target/site'
+                    }
+
+                    stage('Build Report Image') {
+                        container('docker') {
+                            sh "docker build -t khinkali/sink-testing:${env.VERSION} ."
+                            withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                                sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
+                            }
+                            sh "docker push khinkali/sink-testing:${env.VERSION}"
+                        }
+                    }
+
+                    stage('Deploy Testing on Dev') {
+                        sh "sed -i -e 's/image: khinkali\\/sink-testing:0.0.1/image: khinkali\\/sink:${env.VERSION}/' kubeconfig.yml"
+                        sh "sed -i -e 's/value: \"todo\"/value: \"${env.VERSION}\"/' startup.yml"
+                        container('kubectl') {
+                            sh "kubectl apply -f kubeconfig.yml"
+                        }
                     }
                 }
-                archiveArtifacts artifacts: 'target/reports/*.*', fingerprint: true
-                */
             }
 
             stage('deploy to prod') {
