@@ -66,7 +66,7 @@ podTemplate(label: 'mypod', containers: [
                     sh "kubectl apply -f startup.yml"
                 }
                 container('curl') {
-                    checkVersion(env.VERSION, "http://${HOST}:${PORT}/sink/resources/health", 1, 3)
+                    checkVersion(env.VERSION, "http://${HOST}:${PORT}/sink/resources/health", 1, 5)
                 }
             }
 
@@ -128,7 +128,7 @@ podTemplate(label: 'mypod', containers: [
                         sh "kubectl apply -f startup.yml"
                     }
                     container('curl') {
-                        checkVersion(env.VERSION, 'http://5.189.154.24:30081/sink/resources/health', 1, 3)
+                        checkVersion(env.VERSION, 'http://5.189.154.24:30081/sink/resources/health', 1, 5)
                     }
                 } catch (err) {
                     def user = err.getCauses()[0].getUser()
