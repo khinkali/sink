@@ -89,12 +89,10 @@ podTemplate(label: 'mypod', containers: [
                         archiveArtifacts artifacts: 'target/gatling/**/*.*', fingerprint: true
                         sh 'mkdir site'
                         sh 'cp -r target/gatling/healthsimulation* site'
-                        sh 'ls -la'
                     }
 
                     stage('Build Report Image') {
                         container('docker') {
-                            sh 'ls -la'
                             sh "docker build -t khinkali/sink-testing:${env.VERSION} ."
                             withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                                 sh "docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}"
@@ -104,7 +102,7 @@ podTemplate(label: 'mypod', containers: [
                     }
 
                     stage('Deploy Testing on Dev') {
-                        sh "sed -i -e 's/image: khinkali\\/sink-testing:todo/image: khinkali\\/sink:${env.VERSION}/' kubeconfig.yml"
+                        sh "sed -i -e 's/image: khinkali\\/sink-testing:todo/image: khinkali\\/sink-testing:${env.VERSION}/' kubeconfig.yml"
                         sh "sed -i -e 's/value: \"todo\"/value: \"${env.VERSION}\"/' kubeconfig.yml"
                         container('kubectl') {
                             sh "kubectl apply -f kubeconfig.yml"
