@@ -102,7 +102,7 @@ podTemplate(label: 'mypod', containers: [
                     }
 
                     stage('Deploy Testing on Dev') {
-                        sh "sed -i -e 's/image: khinkali\\/sink-testing:0.0.1/image: khinkali\\/sink:${env.VERSION}/' kubeconfig.yml"
+                        sh "sed -i -e 's/image: khinkali\\/sink-testing:todo/image: khinkali\\/sink:${env.VERSION}/' kubeconfig.yml"
                         sh "sed -i -e 's/value: \"todo\"/value: \"${env.VERSION}\"/' kubeconfig.yml"
                         container('kubectl') {
                             sh "kubectl apply -f kubeconfig.yml"
