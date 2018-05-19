@@ -80,7 +80,7 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('last test') {
-                directory('testing') {
+                dir('testing') {
                     stage('Performance Tests') {
                         git url: 'https://github.com/khinkali/sink-testing'
                         container('maven') {
