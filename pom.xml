@@ -18,6 +18,11 @@
       <version>1.16.20</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>1.0.0</version>
+    </dependency>
     
     <dependency>
       <groupId>ch.khinkali.cryptowatch</groupId>
@@ -27,14 +32,9 @@
     <dependency>
       <groupId>ch.khinkali.cryptowatch</groupId>
       <artifactId>user.events</artifactId>
-      <version>0.1.2</version>
+      <version>0.0.8</version>
     </dependency>
     
-    <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka-clients</artifactId>
-      <version>1.0.0</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.johnzon</groupId>
       <artifactId>jsonb-api</artifactId>
@@ -106,13 +106,5 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <failOnMissingWebXml>false</failOnMissingWebXml>
-    
-    <lt.domain>localhost</lt.domain>
-    <lt.port>8080</lt.port>
-    <lt.path>/sink/resources</lt.path>
-    <lt.threads>5</lt.threads>
-    <lt.iterations>100</lt.iterations>
-    <lt.ramp_time>1</lt.ramp_time>
-    <lt.keycloak_token>TOKEN</lt.keycloak_token>
   </properties>
 </project>
