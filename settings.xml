@@ -23,7 +23,7 @@
       <id>khinkali</id>
       <mirrorOf>*</mirrorOf>
       <name>Khinkali Mirror</name>
-      <url>http://http://5.189.154.24:30181/repository/maven-public/</url>
+      <url>http://5.189.154.24:30181/repository/maven-public/</url>
     </mirror>
   </mirrors>
 
