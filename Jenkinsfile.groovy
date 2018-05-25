@@ -14,8 +14,6 @@ podTemplate(label: 'mypod', containers: [
              'KEYCLOAK_URL=http://5.189.154.24:31190/auth',
              'APPLICATION_USER_ID=e3c92a6e-e085-4887-bc11-58e6540d8a97']) {
         node('mypod') {
-            def mvnHome = tool 'M3'
-            env.PATH = "${mvnHome}/bin/:${env.PATH}"
             properties([
                     buildDiscarder(
                             logRotator(artifactDaysToKeepStr: '',
@@ -30,7 +28,9 @@ podTemplate(label: 'mypod', containers: [
             stage('checkout & unit tests & build') {
                 git url: 'https://github.com/khinkali/sink'
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
-                    sh 'mvn -s settings.xml clean package'
+                    container('maven') {
+                        sh 'mvn -s settings.xml clean package'
+                    }
                 }
                 junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
             }
@@ -42,7 +42,9 @@ podTemplate(label: 'mypod', containers: [
                     currentBuild.description = "Started by: ${BUILD_USER} (${BUILD_USER_EMAIL})"
                 }
 
-                sh "mvn versions:set -DnewVersion=${env.VERSION}"
+                container('maven') {
+                    sh "mvn versions:set -DnewVersion=${env.VERSION}"
+                }
                 sh "git config user.email \"jenkins@khinkali.ch\""
                 sh "git config user.name \"Jenkins\""
                 sh "git tag -a ${env.VERSION} -m \"${env.VERSION}\""
