@@ -1,7 +1,7 @@
 package ch.khinkali.cryptowatch.sink.orders.boundary;
 
+import ch.khinkali.cryptowatch.order.events.entity.OrderPlaced;
 import ch.khinkali.cryptowatch.sink.EventProducer;
-import ch.khinkali.cryptowatch.sink.orders.entity.OrderPlaced;
 
 import javax.inject.Inject;
 

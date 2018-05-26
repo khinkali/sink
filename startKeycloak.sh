@@ -9,4 +9,4 @@ docker run -d \
   -e KAFKA_ADDRESS=kafka:9092 \
   -p 8280:8080 \
   -v ~/Desktop/keycloakdata/:/opt/jboss/keycloak/standalone/data \
-  khinkali/keycloak:0.0.1
+  khinkali/keycloak:0.0.4

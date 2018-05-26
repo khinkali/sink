@@ -34,6 +34,11 @@
       <artifactId>user.events</artifactId>
       <version>0.0.8</version>
     </dependency>
+    <dependency>
+      <groupId>ch.khinkali.cryptowatch</groupId>
+      <artifactId>order.events</artifactId>
+      <version>0.0.1</version>
+    </dependency>
     
     <dependency>
       <groupId>org.apache.johnzon</groupId>

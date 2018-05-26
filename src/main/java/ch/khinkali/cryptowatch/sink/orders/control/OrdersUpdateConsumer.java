@@ -2,7 +2,7 @@ package ch.khinkali.cryptowatch.sink.orders.control;
 
 import ch.khinkali.cryptowatch.events.boundary.EventConsumer;
 import ch.khinkali.cryptowatch.events.entity.BaseEvent;
-import ch.khinkali.cryptowatch.sink.orders.entity.OrderPlaced;
+import ch.khinkali.cryptowatch.order.events.entity.OrderPlaced;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

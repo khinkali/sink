@@ -1,6 +1,6 @@
 package ch.khinkali.cryptowatch.sink.orders.control;
 
-import ch.khinkali.cryptowatch.sink.orders.entity.OrderPlaced;
+import ch.khinkali.cryptowatch.order.events.entity.OrderPlaced;
 import io.prometheus.client.Counter;
 
 import javax.annotation.PostConstruct;
