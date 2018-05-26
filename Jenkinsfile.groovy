@@ -12,7 +12,7 @@ podTemplate(label: 'mypod', containers: [
     withEnv(['HOST=5.189.154.24',
              'PORT=31081',
              'KEYCLOAK_URL=http://5.189.154.24:31190/auth',
-             'APPLICATION_USER_ID=e3c92a6e-e085-4887-bc11-58e6540d8a97']) {
+             'APPLICATION_USER_ID=7f3ae29b-abd0-409b-89a0-2d21cee0a9a2']) {
         node('mypod') {
             properties([
                     buildDiscarder(
