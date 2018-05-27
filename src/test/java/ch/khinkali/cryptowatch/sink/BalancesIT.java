@@ -46,7 +46,7 @@ public class BalancesIT {
                 .getToken();
     }
 
-    @Test(timeout = 20_000L)
+    @Test(timeout = 120_000L)
     public void a01_shouldAddBTC() throws IOException {
         JsonObjectBuilder userBuilder = Json.createObjectBuilder();
         JsonObject coinToAdd = userBuilder
@@ -64,7 +64,7 @@ public class BalancesIT {
         location = postResponse.getHeaderString(LOCATION);
     }
 
-    @Test(timeout = 1_000L)
+    @Test(timeout = 10_000L)
     public void a02_shouldReturnBTC() throws IOException {
         JsonObject coin = provider
                 .client()
@@ -76,7 +76,7 @@ public class BalancesIT {
         assertThat(coin.getJsonNumber("amount").doubleValue(), is(2.2));
     }
 
-    @Test(timeout = 1_000L)
+    @Test(timeout = 10_000L)
     public void a03_shouldReturnAllUsers() throws IOException {
         JsonArray users = provider
                 .target()
@@ -88,7 +88,7 @@ public class BalancesIT {
         System.out.println("users = " + users);
     }
 
-    @Test(timeout = 1_000L)
+    @Test(timeout = 10_000L)
     public void a04_shouldFailWithoutBearerToken() {
         JsonObjectBuilder userBuilder = Json.createObjectBuilder();
         JsonObject coinToAdd = userBuilder
@@ -104,7 +104,7 @@ public class BalancesIT {
         assertThat(postResponse.getStatus(), is(HttpStatus.SC_UNAUTHORIZED));
     }
 
-    @Test(timeout = 1_000L)
+    @Test(timeout = 10_000L)
     public void a05_shouldReturnAllUser() throws IOException {
         String userId = System.getenv("APPLICATION_USER_ID");
         JsonObject user = provider
@@ -117,7 +117,7 @@ public class BalancesIT {
         assertThat(new User(user).getId(), is(userId));
     }
 
-    @Test(timeout = 10_000L)
+    @Test(timeout = 60_000L)
     public void a06_shouldReturnCoins() throws IOException {
         String userId = System.getenv("APPLICATION_USER_ID");
         JsonArray coins = provider
