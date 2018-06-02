@@ -19,7 +19,7 @@ import java.util.UUID;
 @Singleton
 public class UsersUpdateConsumer {
 
-    private EventConsumer eventConsumer;
+    private EventConsumer<String, BaseEvent> eventConsumer;
 
     @Resource
     ManagedExecutorService mes;
@@ -34,7 +34,7 @@ public class UsersUpdateConsumer {
     private void init() {
         kafkaProperties.put("group.id", "user-consumer-" + UUID.randomUUID());
 
-        eventConsumer = new EventConsumer(kafkaProperties, ev -> {
+        eventConsumer = new EventConsumer<>(kafkaProperties, ev -> {
             events.fire(ev);
         }, UserCreated.TOPIC);
 
