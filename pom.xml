@@ -39,6 +39,11 @@
       <artifactId>order.events</artifactId>
       <version>0.0.3</version>
     </dependency>
+    <dependency>
+      <groupId>ch.khinkali.cryptowatch</groupId>
+      <artifactId>tracing</artifactId>
+      <version>0.0.8</version>
+    </dependency>
     
     <dependency>
       <groupId>org.apache.johnzon</groupId>

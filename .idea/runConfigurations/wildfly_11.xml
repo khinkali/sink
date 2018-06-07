@@ -15,7 +15,6 @@
       <option name="PASSWORD" value="" />
     </server-settings>
     <predefined_log_file id="JBoss" enabled="true" />
-    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="38701" />
     </RunnerSettings>
@@ -76,6 +75,11 @@
       <EnvironmentVariables>
         <option name="NAME" value="VERSION" />
         <option name="VALUE" value="1.0.0" />
+        <option name="IS_PREDEFINED" value="false" />
+      </EnvironmentVariables>
+      <EnvironmentVariables>
+        <option name="NAME" value="zipkin.uri" />
+        <option name="VALUE" value="http://localhost:9411" />
         <option name="IS_PREDEFINED" value="false" />
       </EnvironmentVariables>
     </ConfigurationWrapper>

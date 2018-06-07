@@ -24,6 +24,8 @@ spec:
           value: "kafka:9092"
         - name: KEYCLOAK_URL
           value: "http://5.189.154.24:31190/auth"
+        - name: zipkin.uri
+          value: "http://zipkin:9411"
         - name: VERSION
           value: "0.0.1"
         ports:
