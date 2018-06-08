@@ -35,6 +35,21 @@ podTemplate(label: 'mypod', containers: [
                 junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
             }
 
+            stage('sonar analysis') {
+                withCredentials([string(credentialsId: 'sonar-key', variable: 'SONAR_KEY')]) {
+                    withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
+                        container('maven') {
+                            sh """
+                            mvn -s settings.xml sonar:sonar \
+                             -Dsonar.host.url=http://sonar:9000 \
+                             -Dsonar.login=${SONAR_KEY} \
+                             -Dsonar.exclusions=**/Jenkinsfile.groovy,**/target/**
+                           """
+                        }
+                    }
+                }
+            }
+
             stage('build image & git tag & docker push') {
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
