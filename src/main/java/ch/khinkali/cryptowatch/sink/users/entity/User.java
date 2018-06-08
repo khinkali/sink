@@ -54,10 +54,10 @@ public class User {
 
     public JsonArray getCoinsAsJson() {
         JsonArrayBuilder userCoins = Json.createArrayBuilder();
-        for (Coin coin : coins.keySet()) {
+        for (Map.Entry<Coin, Double> coin : coins.entrySet()) {
             JsonObject coinJson = Json.createObjectBuilder()
-                    .add(Coin.JSON_KEYS.COIN_SYMBOL.getJsonKey(), coin.getCoinSymbol())
-                    .add(JSON_KEYS.AMOUNT.getJsonKey(), coins.get(coin))
+                    .add(Coin.JSON_KEYS.COIN_SYMBOL.getJsonKey(), coin.getKey().getCoinSymbol())
+                    .add(JSON_KEYS.AMOUNT.getJsonKey(), coin.getValue())
                     .build();
             userCoins.add(coinJson);
         }

@@ -33,11 +33,7 @@ public class UsersUpdateConsumer {
     @PostConstruct
     private void init() {
         kafkaProperties.put("group.id", "user-consumer-" + UUID.randomUUID());
-
-        eventConsumer = new EventConsumer<>(kafkaProperties, ev -> {
-            events.fire(ev);
-        }, UserCreated.TOPIC);
-
+        eventConsumer = new EventConsumer<>(kafkaProperties, ev -> events.fire(ev), UserCreated.TOPIC);
         mes.execute(eventConsumer);
     }
 
