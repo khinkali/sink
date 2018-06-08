@@ -75,6 +75,14 @@ podTemplate(label: 'mypod', containers: [
                     }
                 }
             }
+            stage("Quality Gate") {
+                timeout(time: 5, unit: 'MINUTES') {
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+            }
 
             stage('deploy to test') {
                 sh "sed -i -e 's/image: khinkali\\/sink:0.0.1/image: khinkali\\/sink:${env.VERSION}/' startup.yml"
