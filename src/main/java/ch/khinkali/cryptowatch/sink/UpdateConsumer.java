@@ -1,7 +1,8 @@
-package ch.khinkali.cryptowatch.sink.users.control;
+package ch.khinkali.cryptowatch.sink;
 
 import ch.khinkali.cryptowatch.events.boundary.EventConsumer;
 import ch.khinkali.cryptowatch.events.entity.BaseEvent;
+import ch.khinkali.cryptowatch.order.events.entity.OrderPlaced;
 import ch.khinkali.cryptowatch.user.events.entity.UserCreated;
 
 import javax.annotation.PostConstruct;
@@ -17,9 +18,10 @@ import java.util.UUID;
 
 @Startup
 @Singleton
-public class UsersUpdateConsumer {
+public class UpdateConsumer {
 
-    private EventConsumer<String, BaseEvent> eventConsumer;
+    private EventConsumer<String, BaseEvent> userConsumer;
+    private EventConsumer<String, BaseEvent> orderConsumer;
 
     @Resource
     ManagedExecutorService mes;
@@ -32,14 +34,18 @@ public class UsersUpdateConsumer {
 
     @PostConstruct
     private void init() {
-        kafkaProperties.put("group.id", "user-consumer-" + UUID.randomUUID());
-        eventConsumer = new EventConsumer<>(kafkaProperties, ev -> events.fire(ev), UserCreated.TOPIC);
-        mes.execute(eventConsumer);
+        kafkaProperties.put("group.id", "consumer-" + UUID.randomUUID());
+        userConsumer = new EventConsumer<>(kafkaProperties, ev -> events.fire(ev), UserCreated.TOPIC);
+        orderConsumer = new EventConsumer<>(kafkaProperties, ev -> events.fire(ev), OrderPlaced.TOPIC);
+
+        mes.execute(userConsumer);
+        mes.execute(orderConsumer);
     }
 
     @PreDestroy
     public void close() {
-        eventConsumer.stop();
+        userConsumer.stop();
+        orderConsumer.stop();
     }
 
 }
