@@ -4,6 +4,7 @@ podTemplate(label: 'mypod', containers: [
         containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
         containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.0', command: 'cat', ttyEnabled: true),
         containerTemplate(name: 'curl', image: 'khinkali/jenkinstemplate:0.0.3', command: 'cat', ttyEnabled: true),
+        containerTemplate(name: 'klar', image: 'khinkali/klar:0.0.4', command: 'cat', ttyEnabled: true),
         containerTemplate(name: 'maven', image: 'maven:3.5.2-jdk-8', command: 'cat', ttyEnabled: true)
 ],
         volumes: [
@@ -62,12 +63,12 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('vulnerability check') {
-                sh 'wget https://github.com/optiopay/klar/releases/download/v2.1.1/klar-2.1.1-linux-amd64'
-                sh 'chmod u+x klar-2.1.1-linux-amd64'
-                def statusCode = sh script: "CLAIR_ADDR=http://clair:6060 ./klar-2.1.1-linux-amd64 khinkali/sink:${env.VERSION}", returnStatus: true
-                if (statusCode != 0) {
-                    currentBuild.result = 'FAILURE'
-                    error "Docker Image did not pass Clair testing."
+                container('klar') {
+                    def statusCode = sh script: "CLAIR_ADDR=http://clair:6060 klar khinkali/sink:${env.VERSION}", returnStatus: true
+                    if (statusCode != 0) {
+                        currentBuild.result = 'FAILURE'
+                        error "Docker Image did not pass Clair testing."
+                    }
                 }
             }
 
