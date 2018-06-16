@@ -36,6 +36,12 @@ podTemplate(label: 'mypod', containers: [
                 junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
             }
 
+            stage('vulnerability check for java libraries') {
+                container('maven') {
+                    sh "mvn -s settings.xml compile net.ossindex:ossindex-maven-plugin:audit -Daudit.ignore=com.sun.mail:javax.mail:1.5.0"
+                }
+            }
+
             stage('build image & git tag & docker push') {
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
@@ -62,7 +68,7 @@ podTemplate(label: 'mypod', containers: [
                 }
             }
 
-            stage('vulnerability check') {
+            stage('vulnerability check for docker image') {
                 container('klar') {
                     def statusCode = sh script: "CLAIR_ADDR=http://clair:6060 klar khinkali/sink:${env.VERSION}", returnStatus: true
                     if (statusCode != 0) {
