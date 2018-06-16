@@ -61,6 +61,16 @@ podTemplate(label: 'mypod', containers: [
                 }
             }
 
+            stage('vulnerability check') {
+                sh 'wget https://github.com/optiopay/klar/releases/download/v2.1.1/klar-2.1.1-linux-amd64'
+                sh 'chmod u+x klar-2.1.1-linux-amd64'
+                def statusCode = sh script: "CLAIR_ADDR=http://5.189.154.24:30060 ./klar-2.1.1-linux-amd64 khinkali/sink:${env.VERSION}", returnStatus: true
+                if (statusCode != 0) {
+                    currentBuild.result = 'FAILURE'
+                    error "Docker Image did not pass Clair testing."
+                }
+            }
+
             stage('sonar analysis') {
                 withCredentials([string(credentialsId: 'sonar-key', variable: 'SONAR_KEY')]) {
                     withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
