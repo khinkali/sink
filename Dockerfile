@@ -1,4 +1,4 @@
-FROM jboss/keycloak-adapter-wildfly:3.4.3.Final
+FROM khinkali/keycloak-adapter-wildfly:0.0.1
 
 MAINTAINER Robert Brem <brem_robert@hotmail.com>
 
