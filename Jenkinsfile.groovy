@@ -64,6 +64,7 @@ podTemplate(label: 'mypod', containers: [
 
             stage('vulnerability check') {
                 container('klar') {
+                    sh "klar"
                     def statusCode = sh script: "CLAIR_ADDR=http://clair:6060 klar khinkali/sink:${env.VERSION}", returnStatus: true
                     if (statusCode != 0) {
                         currentBuild.result = 'FAILURE'
