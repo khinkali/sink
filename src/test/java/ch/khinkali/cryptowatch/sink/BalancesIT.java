@@ -17,8 +17,11 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.airhacks.rulz.jaxrsclient.JAXRSClientProvider.buildWithURI;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -150,6 +153,25 @@ public class BalancesIT {
                 .header("Authorization", "Bearer " + getApplicationToken())
                 .get(JsonArray.class);
         assertFalse(coins.isEmpty());
+    }
+
+    @Test(timeout = 2_000L)
+    public void a07_shouldReturnListOfCoins() throws IOException {
+        JsonArray coins = provider
+                .target()
+                .path("coins")
+                .request()
+                .header("Authorization", "Bearer " + getApplicationToken())
+                .get(JsonArray.class);
+        assertThat(toStringList(coins), hasItems("BTC", "ETH", "XRP"));
+    }
+
+    private List<String> toStringList(JsonArray coins) {
+        List<String> coinsAsString = new ArrayList<>();
+        for (int i = 0; i < coins.size(); i++) {
+            coinsAsString.add(coins.getString(i));
+        }
+        return coinsAsString;
     }
 
 }
