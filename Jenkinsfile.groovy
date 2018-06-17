@@ -13,7 +13,8 @@ podTemplate(label: 'mypod', containers: [
     withEnv(['HOST=5.189.154.24',
              'PORT=31081',
              'KEYCLOAK_URL=http://5.189.154.24:31190/auth',
-             'APPLICATION_USER_ID=7f3ae29b-abd0-409b-89a0-2d21cee0a9a2']) {
+             'APPLICATION_USER_ID=7f3ae29b-abd0-409b-89a0-2d21cee0a9a2',
+             'APPLICATION_USER_WITHOUT_COINS_ID=091fdc4a-ae93-4c69-bfb6-306e3f29006b']) {
         node('mypod') {
             properties([
                     buildDiscarder(
@@ -115,9 +116,11 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('system tests') {
-                withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
-                    container('maven') {
-                        sh "mvn -s settings.xml clean integration-test failsafe:integration-test failsafe:verify"
+                withCredentials([usernamePassword(credentialsId: 'no-coins', passwordVariable: 'NO_COINS_PASSWORD', usernameVariable: 'NO_COINS_USER_NAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'application', passwordVariable: 'APPLICATION_PASSWORD', usernameVariable: 'APPLICATION_USER_NAME')]) {
+                        container('maven') {
+                            sh "mvn -s settings.xml clean integration-test failsafe:integration-test failsafe:verify"
+                        }
                     }
                 }
                 junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'

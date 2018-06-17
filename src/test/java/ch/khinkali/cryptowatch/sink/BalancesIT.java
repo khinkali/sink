@@ -20,8 +20,7 @@ import java.io.IOException;
 
 import static com.airhacks.rulz.jaxrsclient.JAXRSClientProvider.buildWithURI;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BalancesIT {
@@ -38,12 +37,34 @@ public class BalancesIT {
         provider.client().close();
     }
 
-    private String getToken() throws IOException {
+    private String getApplicationToken() throws IOException {
         return KeycloakHeaderCreator
                 .getTokenResponse(
                         System.getenv("APPLICATION_USER_NAME"),
                         System.getenv("APPLICATION_PASSWORD"))
                 .getToken();
+    }
+
+    private String getNoCoinToken() throws IOException {
+        return KeycloakHeaderCreator
+                .getTokenResponse(
+                        System.getenv("NO_COIN_USER_NAME"),
+                        System.getenv("NO_COIN_PASSWORD"))
+                .getToken();
+    }
+
+    @Test(timeout = 20_000L)
+    public void a00_shouldReturnEmptyListOfCoins() throws IOException {
+        String userId = System.getenv("APPLICATION_USER_WITHOUT_COINS_ID");
+        JsonArray coins = provider
+                .target()
+                .path("users")
+                .path(userId)
+                .path("coins")
+                .request()
+                .header("Authorization", "Bearer " + getApplicationToken())
+                .get(JsonArray.class);
+        assertTrue(coins.isEmpty());
     }
 
     @Test(timeout = 120_000L)
@@ -58,7 +79,7 @@ public class BalancesIT {
                 .target()
                 .path("orders")
                 .request()
-                .header("Authorization", "Bearer " + getToken())
+                .header("Authorization", "Bearer " + getApplicationToken())
                 .post(Entity.json(coinToAdd));
         assertThat(postResponse.getStatus(), is(HttpStatus.SC_ACCEPTED));
         location = postResponse.getHeaderString(LOCATION);
@@ -70,7 +91,7 @@ public class BalancesIT {
                 .client()
                 .target(location)
                 .request()
-                .header("Authorization", "Bearer " + getToken())
+                .header("Authorization", "Bearer " + getApplicationToken())
                 .get(JsonObject.class);
         assertThat(coin.getString("coinSymbol"), is("BTC"));
         assertThat(coin.getJsonNumber("amount").doubleValue(), is(2.2));
@@ -82,7 +103,7 @@ public class BalancesIT {
                 .target()
                 .path("users")
                 .request()
-                .header("Authorization", "Bearer " + getToken())
+                .header("Authorization", "Bearer " + getApplicationToken())
                 .get(JsonArray.class);
         assertFalse(users.isEmpty());
         System.out.println("users = " + users);
@@ -105,14 +126,14 @@ public class BalancesIT {
     }
 
     @Test(timeout = 10_000L)
-    public void a05_shouldReturnAllUser() throws IOException {
+    public void a05_shouldReturnUserWithId() throws IOException {
         String userId = System.getenv("APPLICATION_USER_ID");
         JsonObject user = provider
                 .target()
                 .path("users")
                 .path(userId)
                 .request()
-                .header("Authorization", "Bearer " + getToken())
+                .header("Authorization", "Bearer " + getApplicationToken())
                 .get(JsonObject.class);
         assertThat(new User(user).getId(), is(userId));
     }
@@ -126,7 +147,7 @@ public class BalancesIT {
                 .path(userId)
                 .path("coins")
                 .request()
-                .header("Authorization", "Bearer " + getToken())
+                .header("Authorization", "Bearer " + getApplicationToken())
                 .get(JsonArray.class);
         assertFalse(coins.isEmpty());
     }

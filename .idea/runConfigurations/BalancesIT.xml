@@ -1,12 +1,12 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="BalancesIT" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
-    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+    <module name="sink" />
+    <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="ch.khinkali.cryptowatch.sink.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <module name="sink" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="PACKAGE_NAME" value="ch.khinkali.cryptowatch.sink" />
@@ -16,7 +16,6 @@
     <option name="VM_PARAMETERS" value="-ea" />
     <option name="PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="file://%MODULE_WORKING_DIR%" />
-    <option name="ENV_VARIABLES" />
     <option name="PASS_PARENT_ENVS" value="true" />
     <option name="TEST_SEARCH_SCOPE">
       <value defaultName="singleModule" />
@@ -28,6 +27,7 @@
       <env name="APPLICATION_PASSWORD" value="adesso" />
       <env name="KEYCLOAK_URL" value="http://localhost:8280/auth" />
       <env name="APPLICATION_USER_ID" value="96ebd818-f899-4198-af13-0f51e6e38ce7" />
+      <env name="APPLICATION_USER_WITHOUT_COINS_ID" value="dbd7df93-9394-4ab8-9ddc-2efe5791e15e" />
     </envs>
     <patterns />
     <method />
