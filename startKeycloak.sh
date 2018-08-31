@@ -8,5 +8,5 @@ docker run -d \
   -e KEYCLOAK_PASSWORD=admin \
   -e KAFKA_ADDRESS=kafka:9092 \
   -p 8280:8080 \
-  -v ~/Desktop/keycloakdata/:/opt/jboss/keycloak/standalone/data \
+  -v ~/keycloakdata/:/opt/jboss/keycloak/standalone/data \
   khinkali/keycloak:0.0.46
