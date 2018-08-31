@@ -3,7 +3,7 @@
 echo "stop and rm zipkin"
 docker stop zipkin && docker rm zipkin
 
-echo "start zookeeper"
+echo "start zipkin"
 docker run --name zipkin -d \
 --net cryptowatch \
 -p 9411:9411 \
