@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="wildfly 11" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss 11.0.0.Final" ALTERNATIVE_JRE_ENABLED="false">
+  <configuration default="false" name="wildfly 13" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss 13.0.0.Final" ALTERNATIVE_JRE_ENABLED="false">
     <option name="UPDATING_POLICY" value="restart-server" />
     <deployment>
       <artifact name="sink:war">
