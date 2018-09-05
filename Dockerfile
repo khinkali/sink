@@ -1,4 +1,4 @@
-FROM khinkali/keycloak-adapter-wildfly:0.0.1
+FROM khinkali/keycloak-adapter-wildfly:0.0.2
 
 MAINTAINER Robert Brem <brem_robert@hotmail.com>
 
