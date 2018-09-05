@@ -65,7 +65,7 @@ public class BalancesIT {
                 .path(userId)
                 .path("coins")
                 .request()
-                .header("Authorization", "Bearer " + getApplicationToken())
+                .header("Authorization", "Bearer " + getNoCoinToken())
                 .get(JsonArray.class);
         assertTrue(coins.isEmpty());
     }
