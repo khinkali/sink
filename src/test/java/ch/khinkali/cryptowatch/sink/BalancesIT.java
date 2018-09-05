@@ -23,7 +23,8 @@ import java.util.List;
 import static com.airhacks.rulz.jaxrsclient.JAXRSClientProvider.buildWithURI;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BalancesIT {
@@ -54,20 +55,6 @@ public class BalancesIT {
                         System.getenv("NO_COIN_USER_NAME"),
                         System.getenv("NO_COIN_PASSWORD"))
                 .getToken();
-    }
-
-    @Test(timeout = 20_000L)
-    public void a00_shouldReturnEmptyListOfCoins() throws IOException {
-        String userId = System.getenv("APPLICATION_USER_WITHOUT_COINS_ID");
-        JsonArray coins = provider
-                .target()
-                .path("users")
-                .path(userId)
-                .path("coins")
-                .request()
-                .header("Authorization", "Bearer " + getNoCoinToken())
-                .get(JsonArray.class);
-        assertTrue(coins.isEmpty());
     }
 
     @Test(timeout = 120_000L)
