@@ -31,9 +31,9 @@ podTemplate(label: 'mypod', containers: [
             ])
 
             stage(checkoutStage) {
-                def now = new Date().getTime()
+                def now = System.currentTimeMillis()
                 git url: "https://github.com/khinkali/${projectName}"
-                def cloneTime = new Date().getTime() - now
+                def cloneTime = System.currentTimeMillis() - now
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
                 container('curl') {
