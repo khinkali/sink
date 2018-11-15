@@ -41,7 +41,7 @@ podTemplate(label: 'mypod', containers: [
 
                 def commits = retrieveCommitsOfCurrentTag(gitUsername, projectName)
                 labels = [["service", "\"${projectName}\""], ["stage", "\"${checkoutStage}\""], ["version", "\"${env.VERSION}\""], ["execution-step", "\"git-clone\""]]
-                payload = [["time-in-ms", cloneTime], ["commits-of-current-tag", "\"${commits}\""]]
+                payload = [["time-in-ms", cloneTime], ["commits-of-current-tag", commits]]
                 sendMetaData(labels, payload)
 
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
@@ -234,8 +234,20 @@ def retrieveCommitsOfCurrentTag(gitUserName, gitRepositoryName) {
     }
     def data = readJSON text: "${latestReleaseJson}"
 
-    return sh(
-            script: "git log ${data.tag_name}..HEAD --oneline",
+    def commits = sh(
+            script: "git log `git describe --tags --abbrev=0`..HEAD --oneline",
             returnStdout: true
     ).trim()
+
+    def allHashes = []
+    def array = commits.split('\n')
+    for (def i = 0; i < array.size(); i++) {
+        def entry = array[i]
+        def startIndex = entry.indexOf(']')
+        if (startIndex == -1) {
+            continue
+        }
+        allHashes << entry.substring(0, startIndex).trim()
+    }
+    return JsonOutput.toJson(allHashes)
 }
