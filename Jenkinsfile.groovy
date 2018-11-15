@@ -203,7 +203,7 @@ podTemplate(label: 'mypod', containers: [
 def sendMetaData(labels, payload) {
     def labelsText
     labels.each {
-        if(labelsText == null) {
+        if (labelsText == null) {
             labelsText = ''
         } else {
             labelsText += ','
@@ -212,7 +212,7 @@ def sendMetaData(labels, payload) {
     }
     def payloadText
     payload.each {
-        if(payloadText == null) {
+        if (payloadText == null) {
             payloadText = ''
         } else {
             payloadText += ','
@@ -225,10 +225,13 @@ def sendMetaData(labels, payload) {
 }
 
 def retrieveCommitsOfCurrentTag(gitUserName, gitRepositoryName) {
-    def latestReleaseJson = sh(
-            script: "curl https://api.github.com/repos/${gitUserName}/${gitRepositoryName}/releases/latest",
-            returnStdout: true
-    ).trim()
+    def latestReleaseJson
+    container('curl') {
+        latestReleaseJson = sh(
+                script: "curl https://api.github.com/repos/${gitUserName}/${gitRepositoryName}/releases/latest",
+                returnStdout: true
+        ).trim()
+    }
     def data = readJSON text: "${latestReleaseJson}"
 
     return sh(
