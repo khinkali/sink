@@ -243,7 +243,7 @@ def retrieveCommitsOfCurrentTag(gitUserName, gitRepositoryName) {
     def array = commits.split('\n')
     for (def i = 0; i < array.size(); i++) {
         def entry = array[i]
-        def startIndex = entry.indexOf(']')
+        def startIndex = entry.indexOf('[')
         if (startIndex == -1) {
             continue
         }
