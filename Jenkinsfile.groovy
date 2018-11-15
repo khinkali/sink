@@ -36,9 +36,9 @@ podTemplate(label: 'mypod', containers: [
                 def cloneTime = System.currentTimeMillis() - now
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
-                container('curl') {
-                    sh "curl -i -H 'Content-Type: application/json' -X POST -d '{\"labels\":{\"service\":\"${projectName}\", \"stage\":\"${checkoutStage}\", \"version\":\"${env.VERSION}\", \"execution-step\":\"git-clone\"}, \"payload\":{\"timeInMs\": ${cloneTime}}}' http://5.189.154.24:30222/sink/resources/metadata"
-                }
+                labels = [["service", projectName], ["stage", checkoutStage], ["version", env.VERSION], ["execution-step", "git-clone"]]
+                payload = [["timeInMs", cloneTime]]
+                sendMetaData(labels, payload)
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     container('maven') {
                         sh 'mvn -s settings.xml clean package'
@@ -192,5 +192,19 @@ podTemplate(label: 'mypod', containers: [
                 }
             }
         }
+    }
+}
+
+def sendMetaData(labels, payload) {
+    def labelsText
+    labels.each {
+        labelsText += "\"${it[0]}\": \"${it[1]}\""
+    }
+    def payloadText
+    payload.each {
+        payloadText += "\"${it[0]}\": \"${it[1]}\""
+    }
+    container('curl') {
+        sh "curl -i -H 'Content-Type: application/json' -X POST -d '{\"labels\":{${labelsText}} \"payload\":{${payloadText}}' http://5.189.154.24:30222/sink/resources/metadata"
     }
 }
