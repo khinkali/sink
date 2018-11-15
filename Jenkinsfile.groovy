@@ -18,6 +18,7 @@ podTemplate(label: 'mypod', containers: [
         node('mypod') {
             def projectName = 'sink'
             def checkoutStage = 'checkout & unit tests & build'
+            def gitUsername = 'khinkali'
 
             properties([
                     buildDiscarder(
@@ -32,13 +33,17 @@ podTemplate(label: 'mypod', containers: [
 
             stage(checkoutStage) {
                 def now = System.currentTimeMillis()
-                git url: "https://github.com/khinkali/${projectName}"
+                git url: "https://github.com/${gitUsername}/${projectName}"
                 def cloneTime = System.currentTimeMillis() - now
+
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
+
+                def commits = retrieveCommitsOfCurrentTag(gitUsername, projectName)
                 labels = [["service", "\"${projectName}\""], ["stage", "\"${checkoutStage}\""], ["version", "\"${env.VERSION}\""], ["execution-step", "\"git-clone\""]]
-                payload = [["timeInMs", cloneTime]]
+                payload = [["time-in-ms", cloneTime], ["commits-of-current-tag", "\"${commits}\""]]
                 sendMetaData(labels, payload)
+
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     container('maven') {
                         sh 'mvn -s settings.xml clean package'
@@ -217,4 +222,17 @@ def sendMetaData(labels, payload) {
     container('curl') {
         sh "curl -i -H 'Content-Type: application/json' -X POST -d '{\"labels\":{${labelsText}}, \"payload\":{${payloadText}}}' http://5.189.154.24:30222/sink/resources/metadata"
     }
+}
+
+def retrieveCommitsOfCurrentTag(gitUserName, gitRepositoryName) {
+    def latestReleaseJson = sh(
+            script: "curl https://api.github.com/repos/${userName}/${repositoryName}/releases/latest",
+            returnStdout: true
+    ).trim()
+    def data = readJSON text: "${latestReleaseJson}"
+
+    return sh(
+            script: "git log ${data.tag_name}..HEAD --oneline",
+            returnStdout: true
+    ).trim()
 }
