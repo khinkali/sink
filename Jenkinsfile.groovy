@@ -225,15 +225,6 @@ def sendMetaData(labels, payload) {
 }
 
 def retrieveCommitsOfCurrentTag(gitUserName, gitRepositoryName) {
-    def latestReleaseJson
-    container('curl') {
-        latestReleaseJson = sh(
-                script: "curl https://api.github.com/repos/${gitUserName}/${gitRepositoryName}/releases/latest",
-                returnStdout: true
-        ).trim()
-    }
-    def data = readJSON text: "${latestReleaseJson}"
-
     def commits = sh(
             script: "git log `git describe --tags --abbrev=0`..HEAD --oneline",
             returnStdout: true
@@ -247,12 +238,15 @@ def retrieveCommitsOfCurrentTag(gitUserName, gitRepositoryName) {
         if (startIndex == -1) {
             continue
         }
-        if(allHashes == null) {
+        if (allHashes == null) {
             allHashes = '['
         } else {
             allHashes += ','
         }
         allHashes += "\"${entry.substring(0, startIndex).trim()}\""
+    }
+    if (allHashes == null) {
+        return null;
     }
     return "${allHashes}]"
 }
