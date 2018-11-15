@@ -1,4 +1,5 @@
 @Library('semantic_releasing') _
+import groovy.json.JsonOutput
 
 podTemplate(label: 'mypod', containers: [
         containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
