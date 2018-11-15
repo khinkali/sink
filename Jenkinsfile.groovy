@@ -226,7 +226,7 @@ def sendMetaData(labels, payload) {
 
 def retrieveCommitsOfCurrentTag(gitUserName, gitRepositoryName) {
     def latestReleaseJson = sh(
-            script: "curl https://api.github.com/repos/${userName}/${repositoryName}/releases/latest",
+            script: "curl https://api.github.com/repos/${gitUserName}/${gitRepositoryName}/releases/latest",
             returnStdout: true
     ).trim()
     def data = readJSON text: "${latestReleaseJson}"
