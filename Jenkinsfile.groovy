@@ -16,6 +16,9 @@ podTemplate(label: 'mypod', containers: [
              'APPLICATION_USER_ID=7f3ae29b-abd0-409b-89a0-2d21cee0a9a2',
              'APPLICATION_USER_WITHOUT_COINS_ID=091fdc4a-ae93-4c69-bfb6-306e3f29006b']) {
         node('mypod') {
+            def projectName = 'sink'
+            def checkoutStage = 'checkout & unit tests & build'
+
             properties([
                     buildDiscarder(
                             logRotator(artifactDaysToKeepStr: '',
@@ -27,8 +30,11 @@ podTemplate(label: 'mypod', containers: [
                     pipelineTriggers([])
             ])
 
-            stage('checkout & unit tests & build') {
-                git url: 'https://github.com/khinkali/sink'
+            stage(checkoutStage) {
+                env.VERSION = semanticReleasing()
+                currentBuild.displayName = env.VERSION
+                git url: "https://github.com/khinkali/${projectName}"
+                sh "curl -i -H 'Content-Type: application/json' -X POST -d '{\"labels\":{\"service\":\"${projectName}\", \"stage\":\"${checkoutStage}\", \"version\":\"${env.VERSION}\", \"execution-step\":\"git-clone\"}, \"payload\":{\"timeInMs\":42}}' http://5.189.154.24:30222/sink/resources/metadata"
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     container('maven') {
                         sh 'mvn -s settings.xml clean package'
@@ -44,8 +50,6 @@ podTemplate(label: 'mypod', containers: [
             }
 
             stage('build image & git tag & docker push') {
-                env.VERSION = semanticReleasing()
-                currentBuild.displayName = env.VERSION
                 wrap([$class: 'BuildUser']) {
                     currentBuild.description = "Started by: ${BUILD_USER} (${BUILD_USER_EMAIL})"
                 }
