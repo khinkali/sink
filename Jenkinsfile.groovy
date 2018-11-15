@@ -32,24 +32,35 @@ podTemplate(label: 'mypod', containers: [
             ])
 
             stage(checkoutStage) {
-                def now = System.currentTimeMillis()
+                def start = System.currentTimeMillis()
                 git url: "https://github.com/${gitUsername}/${projectName}"
-                def cloneTime = System.currentTimeMillis() - now
+                def cloneTime = System.currentTimeMillis() - start
 
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
 
                 def commits = retrieveCommitsOfCurrentTag(gitUsername, projectName)
-                labels = [["service", "\"${projectName}\""], ["stage", "\"${checkoutStage}\""], ["version", "\"${env.VERSION}\""], ["execution-step", "\"git-clone\""]]
-                payload = [["time-in-ms", cloneTime], ["commits-of-current-tag", commits]]
+                def labels = [["service", "\"${projectName}\""], ["stage", "\"${checkoutStage}\""], ["version", "\"${env.VERSION}\""], ["execution-step", "\"git-clone\""]]
+                def payload = [["time-in-ms", cloneTime], ["commits-of-current-tag", commits]]
                 sendMetaData(labels, payload)
 
+                start = System.currentTimeMillis()
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     container('maven') {
                         sh 'mvn -s settings.xml clean package'
                     }
                 }
+                def mcpTime = System.currentTimeMillis() - start
+                labels = [["service", "\"${projectName}\""], ["stage", "\"${checkoutStage}\""], ["version", "\"${env.VERSION}\""], ["execution-step", "\"mvn-clean-package\""]]
+                payload = [["time-in-ms", mcpTime]]
+                sendMetaData(labels, payload)
+
+                start = System.currentTimeMillis()
                 junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+                def junitTime = System.currentTimeMillis() - start
+                labels = [["service", "\"${projectName}\""], ["stage", "\"${checkoutStage}\""], ["version", "\"${env.VERSION}\""], ["execution-step", "\"record-junit-tests\""]]
+                payload = [["time-in-ms", junitTime]]
+                sendMetaData(labels, payload)
             }
 
             stage('vulnerability check for java libraries') {
