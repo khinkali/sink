@@ -36,7 +36,7 @@ podTemplate(label: 'mypod', containers: [
                 def cloneTime = System.currentTimeMillis() - now
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
-                labels = [["service", projectName], ["stage", checkoutStage], ["version", env.VERSION], ["execution-step", "git-clone"]]
+                labels = [["service", "\"${projectName}\""], ["stage", "\"${checkoutStage}\""], ["version", "\"env.VERSION\""], ["execution-step", "\"git-clone\""]]
                 payload = [["timeInMs", cloneTime]]
                 sendMetaData(labels, payload)
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
@@ -203,7 +203,7 @@ def sendMetaData(labels, payload) {
         } else {
             labelsText += ','
         }
-        labelsText += "\"${it[0]}\": \"${it[1]}\""
+        labelsText += "\"${it[0]}\": ${it[1]}"
     }
     def payloadText
     payload.each {
@@ -212,7 +212,7 @@ def sendMetaData(labels, payload) {
         } else {
             payloadText += ','
         }
-        payloadText += "\"${it[0]}\": \"${it[1]}\""
+        payloadText += "\"${it[0]}\": ${it[1]}"
     }
     container('curl') {
         sh "curl -i -H 'Content-Type: application/json' -X POST -d '{\"labels\":{${labelsText}} \"payload\":{${payloadText}}}' http://5.189.154.24:30222/sink/resources/metadata"
