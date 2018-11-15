@@ -1,5 +1,4 @@
 @Library('semantic_releasing') _
-import groovy.json.JsonOutput
 
 podTemplate(label: 'mypod', containers: [
         containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat'),
@@ -240,7 +239,7 @@ def retrieveCommitsOfCurrentTag(gitUserName, gitRepositoryName) {
             returnStdout: true
     ).trim()
 
-    def allHashes = []
+    def allHashes
     def array = commits.split('\n')
     for (def i = 0; i < array.size(); i++) {
         def entry = array[i]
@@ -248,7 +247,12 @@ def retrieveCommitsOfCurrentTag(gitUserName, gitRepositoryName) {
         if (startIndex == -1) {
             continue
         }
-        allHashes << entry.substring(0, startIndex).trim()
+        if(allHashes == null) {
+            allHashes = '['
+        } else {
+            allHashes += ','
+        }
+        allHashes += "\"${entry.substring(0, startIndex).trim()}\""
     }
-    return JsonOutput.toJson(allHashes)
+    return "${allHashes}]"
 }
