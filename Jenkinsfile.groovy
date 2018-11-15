@@ -198,10 +198,20 @@ podTemplate(label: 'mypod', containers: [
 def sendMetaData(labels, payload) {
     def labelsText
     labels.each {
+        if(!labelsText) {
+            labelsText = ''
+        } else {
+            labelsText += ','
+        }
         labelsText += "\"${it[0]}\": \"${it[1]}\""
     }
     def payloadText
     payload.each {
+        if(!payloadText) {
+            payloadText = ''
+        } else {
+            payloadText += ','
+        }
         payloadText += "\"${it[0]}\": \"${it[1]}\""
     }
     container('curl') {
