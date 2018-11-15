@@ -36,7 +36,7 @@ podTemplate(label: 'mypod', containers: [
                 def cloneTime = System.currentTimeMillis() - now
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
-                labels = [["service", "\"${projectName}\""], ["stage", "\"${checkoutStage}\""], ["version", "\"env.VERSION\""], ["execution-step", "\"git-clone\""]]
+                labels = [["service", "\"${projectName}\""], ["stage", "\"${checkoutStage}\""], ["version", "\"${env.VERSION}\""], ["execution-step", "\"git-clone\""]]
                 payload = [["timeInMs", cloneTime]]
                 sendMetaData(labels, payload)
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
