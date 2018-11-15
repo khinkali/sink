@@ -37,7 +37,7 @@ podTemplate(label: 'mypod', containers: [
                 env.VERSION = semanticReleasing()
                 currentBuild.displayName = env.VERSION
                 container('curl') {
-                    sh "curl -i -H 'Content-Type: application/json' -X POST -d '{\"labels\":{\"service\":\"${projectName}\", \"stage\":\"${checkoutStage}\", \"version\":\"${env.VERSION}\", \"execution-step\":\"git-clone\"}, \"payload\":{\"timeInMs\": ${cloneTime}}' http://5.189.154.24:30222/sink/resources/metadata"
+                    sh "curl -i -H 'Content-Type: application/json' -X POST -d '{\"labels\":{\"service\":\"${projectName}\", \"stage\":\"${checkoutStage}\", \"version\":\"${env.VERSION}\", \"execution-step\":\"git-clone\"}, \"payload\":{\"timeInMs\": ${cloneTime}}}' http://5.189.154.24:30222/sink/resources/metadata"
                 }
                 withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
                     container('maven') {
