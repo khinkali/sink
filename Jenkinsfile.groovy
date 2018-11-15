@@ -198,7 +198,7 @@ podTemplate(label: 'mypod', containers: [
 def sendMetaData(labels, payload) {
     def labelsText
     labels.each {
-        if(!labelsText) {
+        if(labelsText == null) {
             labelsText = ''
         } else {
             labelsText += ','
@@ -207,7 +207,7 @@ def sendMetaData(labels, payload) {
     }
     def payloadText
     payload.each {
-        if(!payloadText) {
+        if(payloadText == null) {
             payloadText = ''
         } else {
             payloadText += ','
