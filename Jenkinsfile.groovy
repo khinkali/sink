@@ -231,7 +231,7 @@ def sendMetaData(labels, payload) {
         payloadText += "\"${it[0]}\": ${it[1]}"
     }
     container('curl') {
-        sh "curl -i -H 'Content-Type: application/json' -X POST -d '{\"labels\":{${labelsText}}, \"payload\":{${payloadText}}}' http://5.189.154.24:30222/sink/resources/metadata"
+        sh "curl -i -H 'Content-Type: application/json' -X POST -d '{\"team\": \"f152a1f4-8b5e-4e7d-9142-e1664d76f5f1\", \"labels\":{${labelsText}}, \"payload\":{${payloadText}}}' http://5.189.154.24:30222/sink/resources/metadata"
     }
 }
 
